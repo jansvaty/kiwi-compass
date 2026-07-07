@@ -306,11 +306,6 @@ footer a { color: var(--accent); font-weight: 600; }
 @media (min-width: 900px) {
   .home header, .home main, .home footer { max-width: 1000px; }
   .home section { margin-top: 56px; }
-  .hero .lead {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 36px;
-  }
   .home p { max-width: 70ch; }
   .factors { grid-template-columns: repeat(3, 1fr); }
   .sources { grid-template-columns: 1fr 1fr; }
