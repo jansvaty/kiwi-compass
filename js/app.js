@@ -19,7 +19,7 @@ const steps = [
     valid: () => state.work !== null,
     render() {
       return `<div class="grid">${WORK_FIELDS.map(w => `
-        <button class="opt ${state.work === w.id ? "sel" : ""}" data-work="${w.id}">${w.label}</button>
+        <button class="opt ${state.work === w.id ? "sel" : ""}" aria-pressed="${state.work === w.id}" data-work="${w.id}">${w.label}</button>
       `).join("")}</div>`;
     }
   },
@@ -29,7 +29,7 @@ const steps = [
     valid: () => true,
     render() {
       return `<div class="grid">${HOBBIES.map(h => `
-        <button class="opt ${state.hobbies.has(h.id) ? "sel" : ""}" data-hobby="${h.id}">${h.label}</button>
+        <button class="opt ${state.hobbies.has(h.id) ? "sel" : ""}" aria-pressed="${state.hobbies.has(h.id)}" data-hobby="${h.id}">${h.label}</button>
       `).join("")}</div>`;
     }
   },
@@ -39,7 +39,7 @@ const steps = [
     valid: () => true,
     render() {
       return `<div class="grid">${TRAVEL.map(t => `
-        <button class="opt ${state.travel.has(t.id) ? "sel" : ""}" data-travel="${t.id}">${t.label}</button>
+        <button class="opt ${state.travel.has(t.id) ? "sel" : ""}" aria-pressed="${state.travel.has(t.id)}" data-travel="${t.id}">${t.label}</button>
       `).join("")}</div>`;
     }
   },
@@ -49,13 +49,13 @@ const steps = [
     valid: () => state.social !== null,
     render() {
       return `<div class="cards">${SOCIAL_STYLES.map(s => `
-        <button class="card ${state.social === s.id ? "sel" : ""}" data-social="${s.id}">
+        <button class="card ${state.social === s.id ? "sel" : ""}" aria-pressed="${state.social === s.id}" data-social="${s.id}">
           <strong>${s.label}</strong><span>${s.desc}</span>
         </button>
       `).join("")}</div>
       <h3 class="sub">Having other Kiwis around?</h3>
       <div class="cards">${KIWI_IMPORTANCE.map(k => `
-        <button class="card ${state.kiwi === k.id ? "sel" : ""}" data-kiwi="${k.id}">
+        <button class="card ${state.kiwi === k.id ? "sel" : ""}" aria-pressed="${state.kiwi === k.id}" data-kiwi="${k.id}">
           <strong>${k.label}</strong><span>${k.desc}</span>
         </button>
       `).join("")}</div>`;
@@ -67,7 +67,7 @@ const steps = [
     valid: () => true,
     render() {
       return `<div class="cards">${COST_IMPORTANCE.map(c => `
-        <button class="card ${state.cost === c.id ? "sel" : ""}" data-cost="${c.id}">
+        <button class="card ${state.cost === c.id ? "sel" : ""}" aria-pressed="${state.cost === c.id}" data-cost="${c.id}">
           <strong>${c.label}</strong><span>${c.desc}</span>
         </button>
       `).join("")}</div>`;
@@ -75,13 +75,15 @@ const steps = [
   }
 ];
 
+let focusHeading = false;
+
 function render() {
   if (state.step >= steps.length) return renderResults();
   const s = steps[state.step];
   app.innerHTML = `
-    <div class="progress"><div class="bar" style="width:${((state.step) / steps.length) * 100}%"></div></div>
+    <div class="progress" aria-hidden="true"><div class="bar" style="width:${((state.step) / steps.length) * 100}%"></div></div>
     <p class="stepnum">Step ${state.step + 1} of ${steps.length}</p>
-    <h2>${s.title}</h2>
+    <h2 id="step-title" tabindex="-1">${s.title}</h2>
     ${s.hint ? `<p class="hint">${s.hint}</p>` : ""}
     ${s.render()}
     <div class="nav">
@@ -91,6 +93,10 @@ function render() {
       </button>
     </div>`;
   window.scrollTo(0, 0);
+  if (focusHeading) {
+    focusHeading = false;
+    document.getElementById("step-title")?.focus();
+  }
 }
 
 function renderResults() {
@@ -98,7 +104,7 @@ function renderResults() {
   const results = scoreCities(prefs);
   const top = results[0];
   app.innerHTML = `
-    <h2>Your matches</h2>
+    <h2 id="step-title" tabindex="-1">Your matches</h2>
     <p class="hint">Based on your work, hobbies, travel and social life against each city's profile.
     Tap a city to see the reasoning.</p>
     <div class="results">
@@ -107,7 +113,7 @@ function renderResults() {
           <summary>
             <span class="ring" style="--p:${r.percent}"><span>${r.percent}%</span></span>
             <span class="cityname"><strong>${r.city.name}</strong><em>${r.city.state}</em></span>
-            <span class="chev">›</span>
+            <span class="chev" aria-hidden="true">›</span>
           </summary>
           <div class="breakdown">
             ${r.breakdown.map(f => `
@@ -116,10 +122,10 @@ function renderResults() {
                   <span>${f.label}</span>
                   <span class="pct">${Math.round(f.score * 100)}%</span>
                 </div>
-                <div class="meter"><div style="width:${f.score * 100}%"></div></div>
+                <div class="meter" aria-hidden="true"><div style="width:${f.score * 100}%"></div></div>
                 <p>${f.reason}</p>
                 <p class="source">Source: ${f.sourceUrl
-                  ? `<a href="${f.sourceUrl}" target="_blank" rel="noopener">${f.source}</a>`
+                  ? `<a href="${f.sourceUrl}" target="_blank" rel="noopener">${f.source}<span class="sr-only"> (opens in new tab)</span></a>`
                   : f.source}</p>
               </div>
             `).join("")}
@@ -135,6 +141,10 @@ function renderResults() {
     (ABS Census 2021, ABS labour statistics, Bureau of Meteorology averages, 2025 airline routes).
     Always verify current data before making the move.</p>`;
   window.scrollTo(0, 0);
+  if (focusHeading) {
+    focusHeading = false;
+    document.getElementById("step-title")?.focus();
+  }
 }
 
 app.addEventListener("click", e => {
@@ -152,11 +162,12 @@ app.addEventListener("click", e => {
   else if (b.dataset.social !== undefined) { state.social = b.dataset.social; render(); }
   else if (b.dataset.kiwi !== undefined) { state.kiwi = b.dataset.kiwi; render(); }
   else if (b.dataset.cost !== undefined) { state.cost = b.dataset.cost; render(); }
-  else if (b.id === "next") { state.step++; render(); }
-  else if (b.id === "back") { state.step--; render(); }
+  else if (b.id === "next") { state.step++; focusHeading = true; render(); }
+  else if (b.id === "back") { state.step--; focusHeading = true; render(); }
   else if (b.id === "restart") {
     Object.assign(state, { step: 0, work: null, social: null, kiwi: "some", cost: "some" });
     state.hobbies.clear(); state.travel.clear();
+    focusHeading = true;
     render();
   }
 });

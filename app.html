@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Find your match | Kiwi Compass</title>
   <meta name="description" content="Answer five quick questions and get a ranked match for 12 Australian cities, with reasoning for every factor.">
-  <meta name="theme-color" content="#0f3d3e">
+  <meta name="theme-color" content="#0f3d3e" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111917" media="(prefers-color-scheme: dark)">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -17,17 +18,17 @@
 <body>
   <header>
     <a href="index.html" class="brand homelink">
-      <svg class="logo" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kiwi Compass logo">
-        <circle cx="32" cy="32" r="27" fill="none" stroke="#0f3d3e" stroke-width="4.5"/>
-        <g stroke="#0f3d3e" stroke-width="2" opacity="0.3">
+      <svg class="logo" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="32" cy="32" r="27" fill="none" style="stroke: var(--accent)" stroke-width="4.5"/>
+        <g style="stroke: var(--accent)" stroke-width="2" opacity="0.3">
           <line x1="32" y1="9" x2="32" y2="14"/>
           <line x1="32" y1="50" x2="32" y2="55"/>
           <line x1="9" y1="32" x2="14" y2="32"/>
           <line x1="50" y1="32" x2="55" y2="32"/>
         </g>
-        <polygon points="17.9,17.9 36.2,27.8 27.8,36.2" fill="#0f3d3e"/>
-        <polygon points="46.1,46.1 27.8,36.2 36.2,27.8" fill="#a3c1bd"/>
-        <circle cx="32" cy="32" r="3" fill="#fafaf8"/>
+        <polygon points="17.9,17.9 36.2,27.8 27.8,36.2" style="fill: var(--accent)"/>
+        <polygon points="46.1,46.1 27.8,36.2 36.2,27.8" style="fill: var(--logo-dim)"/>
+        <circle cx="32" cy="32" r="3" style="fill: var(--bg)"/>
       </svg>
       <div>
         <h1>Kiwi <span>Compass</span></h1>
