@@ -265,7 +265,6 @@ button.ghost {
   margin-top: 10px;
 }
 .cta-note { font-size: 13px; color: var(--muted) !important; margin-top: 10px; }
-.cta-bottom { text-align: center; padding-bottom: 10px; }
 
 .factors, .sources {
   list-style: none;
