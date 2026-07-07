@@ -8,6 +8,9 @@
  *   housing    : median house price + rental/buyer availability (0-1), indicative 2025
  *   family     : schools, education options and family-friendliness (0-1, ACARA/city profile)
  *   pets       : pet-friendly housing and lifestyle (0-1, tenancy rules + geography)
+ *   weather    : fit for each climate preference (0-1, BOM 30-year averages)
+ *   dating     : singles scene and ease of meeting people (0-1, city profile)
+ *   pathways   : fit for temporary stays, study and settling (0-1, city profile)
  *   industries : derived from ABS employment-by-industry regional concentrations (0–1 relative strength)
  *   climate    : Bureau of Meteorology 30-year averages (summarised)
  *   flights    : scheduled international route coverage, 2025 (0–1 per region)
@@ -35,7 +38,11 @@ const CITIES = [
     pets: { score: .5, note: "Apartment-heavy rental stock and stiff competition make renting with pets hard; great coastal walks once you're settled." },
     housing: { buy: 1600000, rentAvail: .3, buyAvail: .45,
       rentNote: "Vacancy sits around 1.5% and competition for family homes is fierce.",
-      buyNote: "Australia's priciest market; most family houses sell at auction." }
+      buyNote: "Australia's priciest market; most family houses sell at auction." },
+    weather: { mild: .8, hot: .6, tropical: .3, seasonal: .5 },
+    dating: { score: .85, note: "Australia's biggest singles pool and endless ways to meet people, though the dating scene moves fast." },
+    pathways: { temp: .8, study: .95, settle: .65,
+      note: "The deepest job market and five universities, but costs work against putting down long-term roots." }
   },
   {
     id: "melbourne", name: "Melbourne", state: "VIC",
@@ -53,7 +60,11 @@ const CITIES = [
     pets: { score: .65, note: "Victorian renters can generally keep pets, and parks are everywhere; inner-city apartments suit smaller animals." },
     housing: { buy: 950000, rentAvail: .45, buyAvail: .6,
       rentNote: "More rental supply than the other big capitals, with vacancy near 2%.",
-      buyNote: "The best-supplied big-city market; units and townhouses keep entry prices down." }
+      buyNote: "The best-supplied big-city market; units and townhouses keep entry prices down." },
+    weather: { mild: .7, hot: .3, tropical: .05, seasonal: 1 },
+    dating: { score: .9, note: "A huge, sociable singles scene built around bars, live music and hobby clubs." },
+    pathways: { temp: .8, study: 1, settle: .75,
+      note: "Australia's biggest university sector, a deep casual job market and better housing supply for settlers." }
   },
   {
     id: "brisbane", name: "Brisbane", state: "QLD",
@@ -71,7 +82,11 @@ const CITIES = [
     pets: { score: .8, note: "Queensland rentals must consider pet requests, and house-with-yard stock plus off-leash parks make life easy." },
     housing: { buy: 1000000, rentAvail: .3, buyAvail: .45,
       rentNote: "Vacancy is tight at around 1%, driven by strong interstate migration.",
-      buyNote: "Prices have run hard since 2021 but houses with yards remain findable." }
+      buyNote: "Prices have run hard since 2021 but houses with yards remain findable." },
+    weather: { mild: .5, hot: .85, tropical: .6, seasonal: .3 },
+    dating: { score: .75, note: "A growing young-professional scene with an easier pace than Sydney." },
+    pathways: { temp: .75, study: .85, settle: .85,
+      note: "Strong growth, good universities and liveable costs make most pathways straightforward." }
   },
   {
     id: "perth", name: "Perth", state: "WA",
@@ -89,7 +104,11 @@ const CITIES = [
     pets: { score: .8, note: "Big yards, huge dog beaches and recent tenancy reforms that favour pet owners." },
     housing: { buy: 850000, rentAvail: .2, buyAvail: .4,
       rentNote: "The tightest rental market in the country, with vacancy under 1%.",
-      buyNote: "Still cheaper than the east coast, but the boom has eaten the bargains." }
+      buyNote: "Still cheaper than the east coast, but the boom has eaten the bargains." },
+    weather: { mild: .6, hot: .9, tropical: .15, seasonal: .5 },
+    dating: { score: .65, note: "A decent scene with a smaller pool; expat and Kiwi circles do a lot of the introducing." },
+    pathways: { temp: .7, study: .75, settle: .8,
+      note: "High wages and solid universities; the distance suits committed movers more than short stints." }
   },
   {
     id: "adelaide", name: "Adelaide", state: "SA",
@@ -107,7 +126,11 @@ const CITIES = [
     pets: { score: .8, note: "Yard-heavy suburbs, dog-friendly beaches and tenancy rules that lean pet-positive." },
     housing: { buy: 800000, rentAvail: .3, buyAvail: .45,
       rentNote: "Vacancy is tight at around 1%, though rents stay below the big capitals.",
-      buyNote: "One of the more affordable capital markets, with steady rather than frantic competition." }
+      buyNote: "One of the more affordable capital markets, with steady rather than frantic competition." },
+    weather: { mild: .65, hot: .8, tropical: .05, seasonal: .7 },
+    dating: { score: .55, note: "A smaller pool where social circles overlap quickly; clubs and sport open doors." },
+    pathways: { temp: .6, study: .8, settle: .85,
+      note: "Affordable, stable and studenty; one of the easiest cities to build a settled base." }
   },
   {
     id: "goldcoast", name: "Gold Coast", state: "QLD",
@@ -125,7 +148,11 @@ const CITIES = [
     pets: { score: .7, note: "Dog beaches and yards abound, but holiday-let competition squeezes pet-friendly rentals near the beach." },
     housing: { buy: 1150000, rentAvail: .3, buyAvail: .4,
       rentNote: "Tight vacancy and beach-suburb premiums; inland suburbs offer relief.",
-      buyNote: "Beach postcodes price like Sydney; value sits in the hinterland corridors." }
+      buyNote: "Beach postcodes price like Sydney; value sits in the hinterland corridors." },
+    weather: { mild: .55, hot: .8, tropical: .6, seasonal: .3 },
+    dating: { score: .7, note: "Young, active and transient; beach and fitness culture drives the scene." },
+    pathways: { temp: .8, study: .6, settle: .7,
+      note: "Casual tourism work makes arriving easy; study options are thinner and holiday-town costs bite long-term." }
   },
   {
     id: "canberra", name: "Canberra", state: "ACT",
@@ -143,7 +170,11 @@ const CITIES = [
     pets: { score: .75, note: "Pet-positive tenancy rules and off-leash space everywhere; hot summers and frosty winters need managing." },
     housing: { buy: 970000, rentAvail: .65, buyAvail: .55,
       rentNote: "The highest vacancy of the mainland capitals; rents are high but findable.",
-      buyNote: "Steady public-service demand keeps prices firm but rarely frenzied." }
+      buyNote: "Steady public-service demand keeps prices firm but rarely frenzied." },
+    weather: { mild: .5, hot: .5, tropical: 0, seasonal: .95 },
+    dating: { score: .6, note: "Full of young professionals but light on nightlife; apps, sport and clubs do the work." },
+    pathways: { temp: .5, study: .85, settle: .85,
+      note: "Stable government careers, the ANU and high incomes; ideal for settling, quieter for a short stint." }
   },
   {
     id: "sunshinecoast", name: "Sunshine Coast", state: "QLD",
@@ -161,7 +192,11 @@ const CITIES = [
     pets: { score: .85, note: "Yards, beaches and acreage within reach; pet-friendly rentals go fast." },
     housing: { buy: 1100000, rentAvail: .3, buyAvail: .35,
       rentNote: "Sea-changers keep vacancy tight and rents close to capital-city levels.",
-      buyNote: "Lifestyle demand has pushed prices past most capitals; stock is limited." }
+      buyNote: "Lifestyle demand has pushed prices past most capitals; stock is limited." },
+    weather: { mild: .6, hot: .75, tropical: .65, seasonal: .3 },
+    dating: { score: .5, note: "Couples-and-families territory; the singles pool is small and skews older." },
+    pathways: { temp: .6, study: .4, settle: .75,
+      note: "Lifestyle-first living; casual work exists but study options and career depth are limited." }
   },
   {
     id: "hobart", name: "Hobart", state: "TAS",
@@ -179,7 +214,11 @@ const CITIES = [
     pets: { score: .8, note: "Cool climate, walking trails and yard stock suit dogs well; the rental pool is just small." },
     housing: { buy: 700000, rentAvail: .5, buyAvail: .55,
       rentNote: "The post-2020 squeeze has eased; rents are the lowest of any capital here.",
-      buyNote: "The most affordable capital market, with character homes still under $700k." }
+      buyNote: "The most affordable capital market, with character homes still under $700k." },
+    weather: { mild: 1, hot: .15, tropical: 0, seasonal: .8 },
+    dating: { score: .45, note: "A small pool with tight circles; the arts and outdoors scenes are the ways in." },
+    pathways: { temp: .5, study: .65, settle: .7,
+      note: "UTAS anchors the study options; cheap to settle if your industry fits the island." }
   },
   {
     id: "darwin", name: "Darwin", state: "NT",
@@ -197,7 +236,11 @@ const CITIES = [
     pets: { score: .6, note: "Yards are standard, but heat, humidity and wildlife (snakes, crocs near water) are real considerations." },
     housing: { buy: 580000, rentAvail: .55, buyAvail: .7,
       rentNote: "Defence turnover keeps rentals moving; high rents for the price of the houses.",
-      buyNote: "The cheapest capital houses in Australia, if you can commit to the tropics." }
+      buyNote: "The cheapest capital houses in Australia, if you can commit to the tropics." },
+    weather: { mild: .1, hot: 1, tropical: 1, seasonal: .1 },
+    dating: { score: .65, note: "Highly transient and sociable; easy to meet people, most of them passing through." },
+    pathways: { temp: .85, study: .45, settle: .5,
+      note: "Made for stints: quick jobs and high turnover, but few people stay for the long haul." }
   },
   {
     id: "newcastle", name: "Newcastle", state: "NSW",
@@ -215,7 +258,11 @@ const CITIES = [
     pets: { score: .8, note: "Off-leash beaches, yard stock and a dog-friendly cafe culture." },
     housing: { buy: 950000, rentAvail: .35, buyAvail: .45,
       rentNote: "Sydney escapees keep vacancy tight, but rents undercut Sydney by a third.",
-      buyNote: "Family houses at two-thirds of Sydney prices, with demand to match." }
+      buyNote: "Family houses at two-thirds of Sydney prices, with demand to match." },
+    weather: { mild: .8, hot: .6, tropical: .25, seasonal: .5 },
+    dating: { score: .65, note: "A university city with genuine pub culture and a friendlier pace than Sydney." },
+    pathways: { temp: .55, study: .75, settle: .8,
+      note: "A solid university and steady industries; an easy middle path for settling." }
   },
   {
     id: "cairns", name: "Cairns", state: "QLD",
@@ -233,7 +280,11 @@ const CITIES = [
     pets: { score: .65, note: "Yards are common, but tropical heat, ticks and crocodile-risk waterways constrain dog life." },
     housing: { buy: 550000, rentAvail: .25, buyAvail: .6,
       rentNote: "Tourism workers compete hard for a small rental pool.",
-      buyNote: "Among the cheapest houses on this list; cyclone-rated insurance adds cost." }
+      buyNote: "Among the cheapest houses on this list; cyclone-rated insurance adds cost." },
+    weather: { mild: .2, hot: .95, tropical: 1, seasonal: .15 },
+    dating: { score: .6, note: "The backpacker and tourism crowd keeps it sociable, but faces change with the seasons." },
+    pathways: { temp: .85, study: .45, settle: .6,
+      note: "Tourism keeps short-term work plentiful; long-term career depth is limited." }
   }
 ];
 
@@ -284,11 +335,25 @@ const KIWI_IMPORTANCE = [
   { id: "low", label: "Not a factor", desc: "I'll make friends anywhere" }
 ];
 
-const FAMILY_OPTIONS = [
-  { id: "solo", label: "Just me (or us two)", desc: "No kids or pets making the trip" },
-  { id: "kids", label: "With kids", desc: "Schools, childcare and family life matter" },
-  { id: "pets", label: "With pets", desc: "Pet-friendly housing and lifestyle matter" },
-  { id: "both", label: "Kids and pets", desc: "The whole household is coming" }
+const WEATHER_OPTIONS = [
+  { id: "mild", label: "Milder and temperate", desc: "Closest to NZ: warm summers, cool winters" },
+  { id: "hot", label: "Hot and sunny", desc: "Dry heat, big summers, beach weather" },
+  { id: "tropical", label: "Tropical", desc: "Hot and humid, wet season included" },
+  { id: "seasonal", label: "Four distinct seasons", desc: "Melbourne-style variety, cold snaps included" }
+];
+
+const HOUSEHOLD_OPTIONS = [
+  { id: "single", label: "I'm single", desc: "Moving on my own" },
+  { id: "connection", label: "Hoping to meet someone", desc: "Dating and meeting people matters" },
+  { id: "kids", label: "Kids in tow", desc: "Schools, childcare and family life matter" },
+  { id: "pets", label: "Pets in tow", desc: "Pet-friendly housing and lifestyle matter" }
+];
+
+const PURPOSE_OPTIONS = [
+  { id: "temp", label: "Temporarily", desc: "A working stint or adventure, then reassess" },
+  { id: "study", label: "To study", desc: "University and training options matter" },
+  { id: "settle", label: "To settle down", desc: "Long-term roots, stability and housing" },
+  { id: "citizenship", label: "Working towards citizenship", desc: "Building the four-year direct pathway for Kiwis" }
 ];
 
 const HOUSING_OPTIONS = [

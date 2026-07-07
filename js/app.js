@@ -4,10 +4,12 @@ const state = {
   step: 0,
   work: null,
   hobbies: new Set(),
+  weather: null,
   travel: new Set(),
   social: null,
   kiwi: "some",
-  family: null,
+  household: new Set(),
+  purpose: null,
   housing: "rent",
   budget: { rent: 550, buy: 800000 }
 };
@@ -47,6 +49,18 @@ const steps = [
     }
   },
   {
+    title: "What weather suits you?",
+    hint: "We match this against 30-year climate averages for each city.",
+    valid: () => state.weather !== null,
+    render() {
+      return `<div class="cards">${WEATHER_OPTIONS.map(w => `
+        <button class="card ${state.weather === w.id ? "sel" : ""}" aria-pressed="${state.weather === w.id}" data-weather="${w.id}">
+          <strong>${w.label}</strong><span>${w.desc}</span>
+        </button>
+      `).join("")}</div>`;
+    }
+  },
+  {
     title: "Where do you fly for holidays?",
     hint: "We check direct-flight coverage from each city's airport.",
     valid: () => true,
@@ -76,12 +90,24 @@ const steps = [
   },
   {
     title: "Who's making the move with you?",
-    hint: "Kids switch on a schools and family factor; pets switch on a pet-friendliness factor.",
-    valid: () => state.family !== null,
+    hint: "Pick all that apply, or none if it's just you two. Each pick switches on a matching factor.",
+    valid: () => true,
     render() {
-      return `<div class="cards">${FAMILY_OPTIONS.map(f => `
-        <button class="card ${state.family === f.id ? "sel" : ""}" aria-pressed="${state.family === f.id}" data-family="${f.id}">
-          <strong>${f.label}</strong><span>${f.desc}</span>
+      return `<div class="cards">${HOUSEHOLD_OPTIONS.map(h => `
+        <button class="card ${state.household.has(h.id) ? "sel" : ""}" aria-pressed="${state.household.has(h.id)}" data-who="${h.id}">
+          <strong>${h.label}</strong><span>${h.desc}</span>
+        </button>
+      `).join("")}</div>`;
+    }
+  },
+  {
+    title: "What's the plan across the ditch?",
+    hint: "We compare how well each city supports the kind of move you're making.",
+    valid: () => state.purpose !== null,
+    render() {
+      return `<div class="cards">${PURPOSE_OPTIONS.map(p => `
+        <button class="card ${state.purpose === p.id ? "sel" : ""}" aria-pressed="${state.purpose === p.id}" data-purpose="${p.id}">
+          <strong>${p.label}</strong><span>${p.desc}</span>
         </button>
       `).join("")}</div>`;
     }
@@ -133,8 +159,9 @@ function render() {
 
 function renderResults() {
   const prefs = {
-    work: state.work, hobbies: state.hobbies, travel: state.travel,
-    social: state.social, kiwi: state.kiwi, family: state.family,
+    work: state.work, hobbies: state.hobbies, weather: state.weather,
+    travel: state.travel, social: state.social, kiwi: state.kiwi,
+    household: state.household, purpose: state.purpose,
     housing: state.housing, budget: state.budget[state.housing]
   };
   const results = scoreCities(prefs);
@@ -195,18 +222,23 @@ app.addEventListener("click", e => {
     state.travel.has(b.dataset.travel) ? state.travel.delete(b.dataset.travel) : state.travel.add(b.dataset.travel);
     render();
   }
+  else if (b.dataset.weather !== undefined) { state.weather = b.dataset.weather; render(); }
   else if (b.dataset.social !== undefined) { state.social = b.dataset.social; render(); }
   else if (b.dataset.kiwi !== undefined) { state.kiwi = b.dataset.kiwi; render(); }
-  else if (b.dataset.family !== undefined) { state.family = b.dataset.family; render(); }
+  else if (b.dataset.who !== undefined) {
+    state.household.has(b.dataset.who) ? state.household.delete(b.dataset.who) : state.household.add(b.dataset.who);
+    render();
+  }
+  else if (b.dataset.purpose !== undefined) { state.purpose = b.dataset.purpose; render(); }
   else if (b.dataset.housing !== undefined) { state.housing = b.dataset.housing; render(); }
   else if (b.id === "next") { state.step++; focusHeading = true; render(); }
   else if (b.id === "back") { state.step--; focusHeading = true; render(); }
   else if (b.id === "restart") {
     Object.assign(state, {
-      step: 0, work: null, social: null, kiwi: "some",
-      family: null, housing: "rent", budget: { rent: 550, buy: 800000 }
+      step: 0, work: null, weather: null, social: null, kiwi: "some",
+      purpose: null, housing: "rent", budget: { rent: 550, buy: 800000 }
     });
-    state.hobbies.clear(); state.travel.clear();
+    state.hobbies.clear(); state.travel.clear(); state.household.clear();
     focusHeading = true;
     render();
   }

@@ -75,9 +75,21 @@ function scoreCity(city, prefs) {
     sourceUrl: "http://www.bom.gov.au/climate/data/"
   });
 
-  // 3. Family & schools / pets (only when they're making the trip)
-  const withKids = prefs.family === "kids" || prefs.family === "both";
-  const withPets = prefs.family === "pets" || prefs.family === "both";
+  // 3. Weather fit
+  const weather = city.weather[prefs.weather] ?? 0.5;
+  const weatherLabel = WEATHER_OPTIONS.find(w => w.id === prefs.weather)?.label ?? "your pick";
+  breakdown.push({
+    key: "weather", label: "Weather fit", score: weather,
+    reason: `${weather >= 0.75 ? "A strong match" : weather >= 0.5 ? "A reasonable match" : "A stretch"} for ${midSentence(weatherLabel)}. ${city.climate}`,
+    source: "BOM 30-year climate averages",
+    sourceUrl: "http://www.bom.gov.au/climate/data/"
+  });
+
+  // 4. Family & schools / pets / meeting someone (only when relevant)
+  const withKids = prefs.household.has("kids");
+  const withPets = prefs.household.has("pets");
+  const lookingToMeet = prefs.household.has("connection");
+  const single = prefs.household.has("single");
   if (withKids) {
     breakdown.push({
       key: "family", label: "Family & schools", score: city.family.score,
@@ -93,8 +105,15 @@ function scoreCity(city, prefs) {
       source: "State tenancy rules + city profile"
     });
   }
+  if (lookingToMeet) {
+    breakdown.push({
+      key: "dating", label: "Meeting someone", score: city.dating.score,
+      reason: city.dating.note,
+      source: "City profile"
+    });
+  }
 
-  // 4. Social scene
+  // 5. Social scene
   const social = city.social[prefs.social] ?? 0.5;
   breakdown.push({
     key: "social", label: "Social life", score: social,
@@ -102,7 +121,7 @@ function scoreCity(city, prefs) {
     source: "City profile"
   });
 
-  // 5. Kiwi community
+  // 6. Kiwi community
   const k = kiwiStats(city);
   const kiwiScore = Math.min(1, Math.sqrt(k.share / KIWI_SHARE_MAX)); // sqrt: diminishing returns
   breakdown.push({
@@ -112,7 +131,7 @@ function scoreCity(city, prefs) {
     sourceUrl: "https://www.abs.gov.au/census"
   });
 
-  // 6. Travel connections
+  // 7. Travel connections
   let travel = 0.5, travelReason = city.flightNote;
   if (prefs.travel.size > 0) {
     const picked = [...prefs.travel];
@@ -125,7 +144,31 @@ function scoreCity(city, prefs) {
     sourceUrl: "https://www.bitre.gov.au/statistics/aviation/international"
   });
 
-  // 7. Housing fit: the user's budget against this city's market
+  // 8. Pathway fit: how well the city supports the reason for the move
+  const pathScore = prefs.purpose === "citizenship"
+    ? city.pathways.settle
+    : city.pathways[prefs.purpose] ?? 0.6;
+  const purposeLabel = PURPOSE_OPTIONS.find(p => p.id === prefs.purpose)?.label ?? "your plan";
+  const pathAdj = pathScore >= 0.85 ? "One of the easiest bases"
+    : pathScore >= 0.7 ? "A strong base"
+    : pathScore >= 0.55 ? "A workable base"
+    : "A harder base";
+  let pathReason = `${pathAdj} for ${midSentence(purposeLabel)}. ${city.pathways.note}`;
+  if (prefs.purpose === "citizenship") {
+    pathReason += " The four-year direct citizenship pathway for NZ citizens is the same nationwide; what differs is how easily you can build the stable residence behind it.";
+  }
+  breakdown.push({
+    key: "pathway", label: "Pathway fit", score: pathScore,
+    reason: pathReason,
+    source: prefs.purpose === "citizenship"
+      ? "Dept of Home Affairs + city profile"
+      : "City profile",
+    sourceUrl: prefs.purpose === "citizenship"
+      ? "https://immi.homeaffairs.gov.au/citizenship"
+      : undefined
+  });
+
+  // 9. Housing fit: the user's budget against this city's market
   const buying = prefs.housing === "buy";
   const price = buying ? city.housing.buy : city.rent;
   const priceFit = clamp01((prefs.budget / price - 0.7) / 0.5);
@@ -144,12 +187,14 @@ function scoreCity(city, prefs) {
       : "https://www.abs.gov.au/statistics/people/housing"
   });
 
-  // Weights — kiwi flexes with stated importance; family and pets only
-  // count when they're coming along
+  // Weights — kiwi flexes with stated importance; family, pets and dating
+  // only count when relevant; social matters a little more for singles
   const kiwiW = { high: 14, some: 8, low: 2 }[prefs.kiwi];
   const weights = {
-    career: 28, hobbies: 20, social: 13, kiwi: kiwiW, travel: 9, housing: 14,
-    family: withKids ? 12 : 0, pets: withPets ? 7 : 0
+    career: 26, hobbies: 16, weather: 10, social: single ? 15 : 12,
+    kiwi: kiwiW, travel: 8, pathway: 10, housing: 13,
+    family: withKids ? 12 : 0, pets: withPets ? 7 : 0,
+    dating: lookingToMeet ? 8 : 0
   };
   const totalW = Object.values(weights).reduce((a, b) => a + b, 0);
 

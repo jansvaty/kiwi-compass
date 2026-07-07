@@ -2,7 +2,7 @@
 
 *Find your place across the ditch.*
 
-A minimalist web app for New Zealanders weighing up a move to Australia. Answer six quick questions - field of work, hobbies, holiday travel, social life, who's coming with you (kids/pets), and your rent-or-buy budget, and get a ranked percentage match for 12 Australian cities, with plain-English reasoning and a source for every factor.
+A minimalist web app for New Zealanders weighing up a move to Australia. Answer eight quick questions - field of work, hobbies, weather preference, holiday travel, social life, who's coming with you (single/dating/kids/pets), the plan (stint, study, settling or citizenship), and your rent-or-buy budget - and get a ranked percentage match for 12 Australian cities, with plain-English reasoning and a source for every factor.
 
 ## Run it
 
@@ -18,18 +18,21 @@ python3 -m http.server 4173
 
 ## How the matching works
 
-Each city gets a weighted score out of 100 across up to eight factors:
+Each city gets a weighted score out of 100 across up to eleven factors:
 
 | Factor | Weight | Driven by |
 |---|---|---|
-| Career fit | 28 | Employment strength for your field (ABS employment by industry) |
-| Lifestyle & hobbies | 20 | City geography, venues, BOM climate averages |
+| Career fit | 26 | Employment strength for your field (ABS employment by industry) |
+| Lifestyle & hobbies | 16 | City geography, venues, BOM climate averages |
+| Weather fit | 10 | Your climate preference against BOM 30-year averages |
 | Family & schools | 12 (only with kids) | Schools, education options and family-friendliness (ACARA/city profile) |
 | Pets | 7 (only with pets) | Pet-friendly tenancy rules, housing stock and lifestyle |
-| Social life | 13 | Fit against your preferred social style |
-| Kiwi community | 2–14 | NZ-born residents, ABS Census 2021 — weight follows how much you said it matters |
-| Travel connections | 9 | Direct international route coverage from the local airport (2025) |
-| Housing fit | 14 | Your rent-or-buy budget (slider) against median rents/house prices and market availability |
+| Meeting someone | 8 (only when looking) | Singles scene and ease of meeting people |
+| Social life | 12 (15 for singles) | Fit against your preferred social style |
+| Kiwi community | 2-14 | NZ-born residents, ABS Census 2021; weight follows how much you said it matters |
+| Travel connections | 8 | Direct international route coverage from the local airport (2025) |
+| Pathway fit | 10 | Fit for a stint, study or settling; the NZ direct citizenship pathway is national (Home Affairs) |
+| Housing fit | 13 | Your rent-or-buy budget (slider) against median rents/house prices and market availability |
 
 Every factor in the results shows its reasoning and its data source.
 
