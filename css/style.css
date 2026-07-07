@@ -238,10 +238,12 @@ button.ghost {
 .home section { margin-top: 44px; }
 
 .hero h2 {
-  font-size: 30px;
-  line-height: 1.2;
-  margin: 8px 0 16px;
+  font-size: clamp(26px, 5vw, 50px);
+  line-height: 1.15;
+  margin: 8px 0 18px;
 }
+
+.hero h2 .line2 { display: block; }
 
 .home p { color: #3a3a36; max-width: 56ch; }
 .home h3 { font-size: 20px; letter-spacing: -0.01em; margin: 0 0 8px; }
@@ -304,7 +306,6 @@ footer a { color: var(--accent); font-weight: 600; }
 @media (min-width: 900px) {
   .home header, .home main, .home footer { max-width: 1000px; }
   .home section { margin-top: 56px; }
-  .hero h2 { font-size: 40px; }
   .hero .lead {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -318,5 +319,4 @@ footer a { color: var(--accent); font-weight: 600; }
 @media (max-width: 480px) {
   .grid { grid-template-columns: 1fr 1fr; }
   h2 { font-size: 22px; }
-  .hero h2 { font-size: 25px; }
 }
