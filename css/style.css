@@ -1,0 +1,221 @@
+:root {
+  --bg: #fafaf8;
+  --ink: #1a1a1a;
+  --muted: #6b6b66;
+  --accent: #0f3d3e;
+  --accent-soft: #e7efee;
+  --line: #e4e4de;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+header {
+  padding: 28px 20px 0;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+header h1 {
+  font-size: 20px;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+header h1 span { color: var(--accent); }
+
+header p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px 20px 60px;
+}
+
+h2 {
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  margin: 20px 0 6px;
+}
+
+.hint { color: var(--muted); margin: 0 0 20px; font-size: 15px; }
+.stepnum {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 18px 0 0;
+}
+
+.progress {
+  height: 3px;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress .bar {
+  height: 100%;
+  background: var(--accent);
+  transition: width .3s ease;
+}
+
+.sub { font-size: 17px; margin: 28px 0 10px; }
+
+/* Option grids */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.opt, .card {
+  font: inherit;
+  text-align: left;
+  padding: 13px 15px;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  cursor: pointer;
+  color: var(--ink);
+  transition: border-color .15s, background .15s;
+}
+
+.opt:hover, .card:hover { border-color: var(--accent); }
+
+.opt.sel, .card.sel {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.cards { display: grid; gap: 10px; }
+.card { display: flex; flex-direction: column; gap: 2px; }
+.card span { color: var(--muted); font-size: 14px; }
+
+/* Nav */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 28px;
+}
+
+button.primary {
+  font: inherit;
+  font-weight: 600;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 13px 26px;
+  cursor: pointer;
+}
+button.primary:disabled { opacity: .35; cursor: default; }
+
+button.ghost {
+  font: inherit;
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 13px 8px;
+}
+
+/* Results */
+.results { display: grid; gap: 10px; margin-top: 8px; }
+
+.result {
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+}
+.result[open] { border-color: var(--accent); }
+
+.result summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  cursor: pointer;
+  list-style: none;
+}
+.result summary::-webkit-details-marker { display: none; }
+
+.ring {
+  --p: 0;
+  width: 52px;
+  height: 52px;
+  flex: none;
+  border-radius: 50%;
+  background: conic-gradient(var(--accent) calc(var(--p) * 1%), var(--line) 0);
+  display: grid;
+  place-items: center;
+}
+.ring > span {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.cityname { display: flex; flex-direction: column; flex: 1; }
+.cityname strong { font-size: 17px; }
+.cityname em { font-style: normal; color: var(--muted); font-size: 13px; }
+
+.chev { color: var(--muted); font-size: 20px; transition: transform .2s; }
+.result[open] .chev { transform: rotate(90deg); }
+
+.breakdown { padding: 4px 16px 16px; border-top: 1px solid var(--line); }
+
+.factor { margin-top: 16px; }
+.factor-head {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 14px;
+}
+.factor-head .pct { color: var(--accent); }
+
+.meter {
+  height: 5px;
+  background: var(--line);
+  border-radius: 3px;
+  margin: 6px 0 6px;
+  overflow: hidden;
+}
+.meter div { height: 100%; background: var(--accent); border-radius: 3px; }
+
+.factor p { margin: 4px 0 0; font-size: 14px; color: #3a3a36; }
+.factor .source {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.disclaimer {
+  color: var(--muted);
+  font-size: 12.5px;
+  margin-top: 32px;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+
+@media (max-width: 480px) {
+  .grid { grid-template-columns: 1fr 1fr; }
+  h2 { font-size: 22px; }
+}
