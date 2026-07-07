@@ -7,8 +7,21 @@ const state = {
   travel: new Set(),
   social: null,
   kiwi: "some",
-  cost: "some"
+  family: null,
+  housing: "rent",
+  budget: { rent: 550, buy: 800000 }
 };
+
+const BUDGET_RANGE = {
+  rent: { min: 300, max: 1000, step: 25 },
+  buy: { min: 400000, max: 2000000, step: 50000 }
+};
+
+function fmtBudget() {
+  return state.housing === "rent"
+    ? `$${state.budget.rent} a week`
+    : `$${state.budget.buy.toLocaleString("en-AU")}`;
+}
 
 const app = document.getElementById("app");
 
@@ -62,15 +75,34 @@ const steps = [
     }
   },
   {
-    title: "How much does cost of living matter?",
-    hint: "This adjusts how heavily rent weighs in your match.",
-    valid: () => true,
+    title: "Who's making the move with you?",
+    hint: "Kids switch on a schools and family factor; pets switch on a pet-friendliness factor.",
+    valid: () => state.family !== null,
     render() {
-      return `<div class="cards">${COST_IMPORTANCE.map(c => `
-        <button class="card ${state.cost === c.id ? "sel" : ""}" aria-pressed="${state.cost === c.id}" data-cost="${c.id}">
-          <strong>${c.label}</strong><span>${c.desc}</span>
+      return `<div class="cards">${FAMILY_OPTIONS.map(f => `
+        <button class="card ${state.family === f.id ? "sel" : ""}" aria-pressed="${state.family === f.id}" data-family="${f.id}">
+          <strong>${f.label}</strong><span>${f.desc}</span>
         </button>
       `).join("")}</div>`;
+    }
+  },
+  {
+    title: "Renting or buying?",
+    hint: "Set your budget and we compare it against each city's prices and availability.",
+    valid: () => true,
+    render() {
+      const r = BUDGET_RANGE[state.housing];
+      return `<div class="cards">${HOUSING_OPTIONS.map(h => `
+        <button class="card ${state.housing === h.id ? "sel" : ""}" aria-pressed="${state.housing === h.id}" data-housing="${h.id}">
+          <strong>${h.label}</strong><span>${h.desc}</span>
+        </button>
+      `).join("")}</div>
+      <div class="budget">
+        <label for="budget">Your ${state.housing === "rent" ? "weekly rent" : "purchase"} budget</label>
+        <input type="range" id="budget" min="${r.min}" max="${r.max}" step="${r.step}"
+          value="${state.budget[state.housing]}" aria-valuetext="${fmtBudget()}">
+        <output id="budget-out" for="budget">${fmtBudget()}</output>
+      </div>`;
     }
   }
 ];
@@ -100,13 +132,17 @@ function render() {
 }
 
 function renderResults() {
-  const prefs = { work: state.work, hobbies: state.hobbies, travel: state.travel, social: state.social, kiwi: state.kiwi, cost: state.cost };
+  const prefs = {
+    work: state.work, hobbies: state.hobbies, travel: state.travel,
+    social: state.social, kiwi: state.kiwi, family: state.family,
+    housing: state.housing, budget: state.budget[state.housing]
+  };
   const results = scoreCities(prefs);
   const top = results[0];
   app.innerHTML = `
     <h2 id="step-title" tabindex="-1">Your matches</h2>
-    <p class="hint">Based on your work, hobbies, travel and social life against each city's profile.
-    Tap a city to see the reasoning.</p>
+    <p class="hint">Based on your work, hobbies, travel, social life, household and housing budget
+    against each city's profile. Tap a city to see the reasoning.</p>
     <div class="results">
       ${results.map((r, i) => `
         <details class="result" ${i === 0 ? "open" : ""}>
@@ -161,14 +197,26 @@ app.addEventListener("click", e => {
   }
   else if (b.dataset.social !== undefined) { state.social = b.dataset.social; render(); }
   else if (b.dataset.kiwi !== undefined) { state.kiwi = b.dataset.kiwi; render(); }
-  else if (b.dataset.cost !== undefined) { state.cost = b.dataset.cost; render(); }
+  else if (b.dataset.family !== undefined) { state.family = b.dataset.family; render(); }
+  else if (b.dataset.housing !== undefined) { state.housing = b.dataset.housing; render(); }
   else if (b.id === "next") { state.step++; focusHeading = true; render(); }
   else if (b.id === "back") { state.step--; focusHeading = true; render(); }
   else if (b.id === "restart") {
-    Object.assign(state, { step: 0, work: null, social: null, kiwi: "some", cost: "some" });
+    Object.assign(state, {
+      step: 0, work: null, social: null, kiwi: "some",
+      family: null, housing: "rent", budget: { rent: 550, buy: 800000 }
+    });
     state.hobbies.clear(); state.travel.clear();
     focusHeading = true;
     render();
+  }
+});
+
+app.addEventListener("input", e => {
+  if (e.target.id === "budget") {
+    state.budget[state.housing] = +e.target.value;
+    e.target.setAttribute("aria-valuetext", fmtBudget());
+    document.getElementById("budget-out").textContent = fmtBudget();
   }
 });
 

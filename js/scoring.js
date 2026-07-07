@@ -25,8 +25,15 @@ function kiwiStats(city) {
 }
 
 // Normalisers derived from the dataset's range
-const RENT_MIN = 450, RENT_MAX = 800;
 const KIWI_SHARE_MAX = 0.07; // Gold Coast ≈ 6.9%
+
+const clamp01 = v => Math.max(0, Math.min(1, v));
+
+function fmtPrice(v) {
+  return v >= 1e6
+    ? `$${(v / 1e6).toFixed(2).replace(/\.?0+$/, "")}m`
+    : `$${Math.round(v / 1000)}k`;
+}
 
 function scoreCity(city, prefs) {
   const breakdown = [];
@@ -68,7 +75,26 @@ function scoreCity(city, prefs) {
     sourceUrl: "http://www.bom.gov.au/climate/data/"
   });
 
-  // 3. Social scene
+  // 3. Family & schools / pets (only when they're making the trip)
+  const withKids = prefs.family === "kids" || prefs.family === "both";
+  const withPets = prefs.family === "pets" || prefs.family === "both";
+  if (withKids) {
+    breakdown.push({
+      key: "family", label: "Family & schools", score: city.family.score,
+      reason: city.family.note,
+      source: "ACARA My School + city profile",
+      sourceUrl: "https://www.myschool.edu.au"
+    });
+  }
+  if (withPets) {
+    breakdown.push({
+      key: "pets", label: "Pets", score: city.pets.score,
+      reason: city.pets.note,
+      source: "State tenancy rules + city profile"
+    });
+  }
+
+  // 4. Social scene
   const social = city.social[prefs.social] ?? 0.5;
   breakdown.push({
     key: "social", label: "Social life", score: social,
@@ -76,7 +102,7 @@ function scoreCity(city, prefs) {
     source: "City profile"
   });
 
-  // 4. Kiwi community
+  // 5. Kiwi community
   const k = kiwiStats(city);
   const kiwiScore = Math.min(1, Math.sqrt(k.share / KIWI_SHARE_MAX)); // sqrt: diminishing returns
   breakdown.push({
@@ -86,7 +112,7 @@ function scoreCity(city, prefs) {
     sourceUrl: "https://www.abs.gov.au/census"
   });
 
-  // 5. Travel connections
+  // 6. Travel connections
   let travel = 0.5, travelReason = city.flightNote;
   if (prefs.travel.size > 0) {
     const picked = [...prefs.travel];
@@ -99,19 +125,32 @@ function scoreCity(city, prefs) {
     sourceUrl: "https://www.bitre.gov.au/statistics/aviation/international"
   });
 
-  // 6. Affordability
-  const afford = Math.max(0, Math.min(1, (RENT_MAX - city.rent) / (RENT_MAX - RENT_MIN)));
+  // 7. Housing fit: the user's budget against this city's market
+  const buying = prefs.housing === "buy";
+  const price = buying ? city.housing.buy : city.rent;
+  const priceFit = clamp01((prefs.budget / price - 0.7) / 0.5);
+  const avail = buying ? city.housing.buyAvail : city.housing.rentAvail;
+  const housingScore = priceFit * 0.75 + avail * 0.25;
   breakdown.push({
-    key: "afford", label: "Affordability", score: afford,
-    reason: `Median advertised rent around $${city.rent}/week.`,
-    source: "Rental market snapshot, 2025 (indicative)",
-    sourceUrl: "https://www.abs.gov.au/statistics/people/housing"
+    key: "housing", label: "Housing fit", score: housingScore,
+    reason: buying
+      ? `Median house price around ${fmtPrice(city.housing.buy)} against your ${fmtPrice(prefs.budget)} budget. ${city.housing.buyNote}`
+      : `Median advertised rent around $${city.rent}/week against your $${prefs.budget}/week budget. ${city.housing.rentNote}`,
+    source: buying
+      ? "Property market snapshot, 2025 (indicative)"
+      : "Rental market snapshot, 2025 (indicative)",
+    sourceUrl: buying
+      ? "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/total-value-dwellings-australia"
+      : "https://www.abs.gov.au/statistics/people/housing"
   });
 
-  // Weights — adjusted by how much the user cares about Kiwi community and cost
+  // Weights — kiwi flexes with stated importance; family and pets only
+  // count when they're coming along
   const kiwiW = { high: 14, some: 8, low: 2 }[prefs.kiwi];
-  const costW = { high: 16, some: 9, low: 3 }[prefs.cost];
-  const weights = { career: 30, hobbies: 24, social: 15, kiwi: kiwiW, travel: 10, afford: costW };
+  const weights = {
+    career: 28, hobbies: 20, social: 13, kiwi: kiwiW, travel: 9, housing: 14,
+    family: withKids ? 12 : 0, pets: withPets ? 7 : 0
+  };
   const totalW = Object.values(weights).reduce((a, b) => a + b, 0);
 
   let total = 0;

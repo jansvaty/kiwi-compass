@@ -172,6 +172,30 @@ h2 {
 .card { display: flex; flex-direction: column; gap: 2px; }
 .card span { color: var(--muted); font-size: 14px; }
 
+/* Budget slider */
+.budget { margin-top: 28px; }
+
+.budget label {
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.budget input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.budget output {
+  display: block;
+  margin-top: 8px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
 /* Nav */
 .nav {
   display: flex;

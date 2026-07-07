@@ -5,6 +5,9 @@
  *   population : ABS Estimated Resident Population, 2023 (Greater Capital City / SUA)
  *   nzBorn     : ABS Census 2021, country of birth (approx., rounded)
  *   rent       : median advertised weekly rent, indicative 2025 (ABS/CoreLogic-style snapshot)
+ *   housing    : median house price + rental/buyer availability (0-1), indicative 2025
+ *   family     : schools, education options and family-friendliness (0-1, ACARA/city profile)
+ *   pets       : pet-friendly housing and lifestyle (0-1, tenancy rules + geography)
  *   industries : derived from ABS employment-by-industry regional concentrations (0–1 relative strength)
  *   climate    : Bureau of Meteorology 30-year averages (summarised)
  *   flights    : scheduled international route coverage, 2025 (0–1 per region)
@@ -27,7 +30,12 @@ const CITIES = [
     hobbies: { surf: 1, hike: .85, arts: .95, music: .9, sport: .95, food: .95, dive: .6, camp: .7, snow: .55 },
     hobbyHighlights: { surf: "100+ ocean beaches from Palm Beach to Cronulla", hike: "Blue Mountains and Royal National Park on the doorstep", snow: "Snowy Mountains ~5.5 hrs away" },
     social: { buzz: 1, balanced: .7, quiet: .3 },
-    socialNote: "Big, fast and international, with a huge dining, nightlife and events scene. It takes effort to build a village."
+    socialNote: "Big, fast and international, with a huge dining, nightlife and events scene. It takes effort to build a village.",
+    family: { score: .7, note: "Enormous school choice and five major universities, but childcare costs and commutes are the toughest in the country." },
+    pets: { score: .5, note: "Apartment-heavy rental stock and stiff competition make renting with pets hard; great coastal walks once you're settled." },
+    housing: { buy: 1600000, rentAvail: .3, buyAvail: .45,
+      rentNote: "Vacancy sits around 1.5% and competition for family homes is fierce.",
+      buyNote: "Australia's priciest market; most family houses sell at auction." }
   },
   {
     id: "melbourne", name: "Melbourne", state: "VIC",
@@ -40,7 +48,12 @@ const CITIES = [
     hobbies: { surf: .6, hike: .7, arts: 1, music: 1, sport: 1, food: 1, dive: .4, camp: .7, snow: .6 },
     hobbyHighlights: { arts: "Australia's gallery, theatre and festival capital", music: "More live-music venues per capita than any Australian city", sport: "MCG, AFL, Australian Open and F1 on home turf" },
     social: { buzz: 1, balanced: .75, quiet: .35 },
-    socialNote: "Laneway bars, live music and club sport. Arguably the easiest big city to find your scene."
+    socialNote: "Laneway bars, live music and club sport. Arguably the easiest big city to find your scene.",
+    family: { score: .8, note: "Strong public and private schools, Australia's biggest university sector, and family suburbs at every price point." },
+    pets: { score: .65, note: "Victorian renters can generally keep pets, and parks are everywhere; inner-city apartments suit smaller animals." },
+    housing: { buy: 950000, rentAvail: .45, buyAvail: .6,
+      rentNote: "More rental supply than the other big capitals, with vacancy near 2%.",
+      buyNote: "The best-supplied big-city market; units and townhouses keep entry prices down." }
   },
   {
     id: "brisbane", name: "Brisbane", state: "QLD",
@@ -53,7 +66,12 @@ const CITIES = [
     hobbies: { surf: .7, hike: .75, arts: .7, music: .75, sport: .85, food: .8, dive: .7, camp: .8, snow: .1 },
     hobbyHighlights: { surf: "Gold Coast and Sunshine Coast breaks within an hour" },
     social: { buzz: .75, balanced: .9, quiet: .6 },
-    socialNote: "Big-city options with a relaxed, outdoorsy pace, and one of the largest Kiwi communities in Australia."
+    socialNote: "Big-city options with a relaxed, outdoorsy pace, and one of the largest Kiwi communities in Australia.",
+    family: { score: .85, note: "Good state schools, growing childcare supply and backyard suburbs; well-regarded universities." },
+    pets: { score: .8, note: "Queensland rentals must consider pet requests, and house-with-yard stock plus off-leash parks make life easy." },
+    housing: { buy: 1000000, rentAvail: .3, buyAvail: .45,
+      rentNote: "Vacancy is tight at around 1%, driven by strong interstate migration.",
+      buyNote: "Prices have run hard since 2021 but houses with yards remain findable." }
   },
   {
     id: "perth", name: "Perth", state: "WA",
@@ -66,7 +84,12 @@ const CITIES = [
     hobbies: { surf: .9, hike: .7, arts: .65, music: .7, sport: .75, food: .8, dive: .8, camp: .8, snow: 0 },
     hobbyHighlights: { surf: "Consistent Indian Ocean swell, Margaret River 3 hrs south", dive: "Rottnest and Ningaloo within reach" },
     social: { buzz: .65, balanced: .85, quiet: .65 },
-    socialNote: "Sunny, beachy and well-paid, but remote. The strong Kiwi and expat networks matter here."
+    socialNote: "Sunny, beachy and well-paid, but remote. The strong Kiwi and expat networks matter here.",
+    family: { score: .8, note: "Spacious family suburbs near beaches, solid public schools and shorter commutes than the east coast." },
+    pets: { score: .8, note: "Big yards, huge dog beaches and recent tenancy reforms that favour pet owners." },
+    housing: { buy: 850000, rentAvail: .2, buyAvail: .4,
+      rentNote: "The tightest rental market in the country, with vacancy under 1%.",
+      buyNote: "Still cheaper than the east coast, but the boom has eaten the bargains." }
   },
   {
     id: "adelaide", name: "Adelaide", state: "SA",
@@ -79,7 +102,12 @@ const CITIES = [
     hobbies: { surf: .6, hike: .75, arts: .8, music: .75, sport: .75, food: .85, dive: .6, camp: .8, snow: .05 },
     hobbyHighlights: { food: "Barossa and McLaren Vale wine regions under an hour away", arts: "Adelaide Festival and Fringe, the world's second-largest fringe" },
     social: { buzz: .55, balanced: .85, quiet: .75 },
-    socialNote: "Compact, affordable and easy-going: 20 minutes to anywhere, though the Kiwi community is smaller."
+    socialNote: "Compact, affordable and easy-going: 20 minutes to anywhere, though the Kiwi community is smaller.",
+    family: { score: .85, note: "Affordable family houses, respected schools and three universities; the classic family-value pick." },
+    pets: { score: .8, note: "Yard-heavy suburbs, dog-friendly beaches and tenancy rules that lean pet-positive." },
+    housing: { buy: 800000, rentAvail: .3, buyAvail: .45,
+      rentNote: "Vacancy is tight at around 1%, though rents stay below the big capitals.",
+      buyNote: "One of the more affordable capital markets, with steady rather than frantic competition." }
   },
   {
     id: "goldcoast", name: "Gold Coast", state: "QLD",
@@ -92,7 +120,12 @@ const CITIES = [
     hobbies: { surf: 1, hike: .7, arts: .5, music: .7, sport: .7, food: .7, dive: .7, camp: .75, snow: 0 },
     hobbyHighlights: { surf: "World-class point breaks at Snapper, Burleigh and Kirra", hike: "Lamington and Springbrook rainforest in the hinterland" },
     social: { buzz: .6, balanced: .8, quiet: .6 },
-    socialNote: "The unofficial Kiwi capital of Australia, with the highest NZ-born share of any Australian city."
+    socialNote: "The unofficial Kiwi capital of Australia, with the highest NZ-born share of any Australian city.",
+    family: { score: .75, note: "Plenty of young families and outdoor life; top-end school choice is thinner, with Brisbane an hour away." },
+    pets: { score: .7, note: "Dog beaches and yards abound, but holiday-let competition squeezes pet-friendly rentals near the beach." },
+    housing: { buy: 1150000, rentAvail: .3, buyAvail: .4,
+      rentNote: "Tight vacancy and beach-suburb premiums; inland suburbs offer relief.",
+      buyNote: "Beach postcodes price like Sydney; value sits in the hinterland corridors." }
   },
   {
     id: "canberra", name: "Canberra", state: "ACT",
@@ -105,7 +138,12 @@ const CITIES = [
     hobbies: { surf: .1, hike: .85, arts: .75, music: .6, sport: .7, food: .75, dive: .1, camp: .8, snow: .8 },
     hobbyHighlights: { snow: "Closest capital to the NSW snowfields (~2.5 hrs)", arts: "National galleries, museums and Parliament on your doorstep" },
     social: { buzz: .45, balanced: .8, quiet: .85 },
-    socialNote: "Small, well-paid and family-friendly; quiet weekends, strong club and sports culture."
+    socialNote: "Small, well-paid and family-friendly; quiet weekends, strong club and sports culture.",
+    family: { score: .95, note: "Among the best-resourced public schools in the country, high family incomes and everything within 20 minutes." },
+    pets: { score: .75, note: "Pet-positive tenancy rules and off-leash space everywhere; hot summers and frosty winters need managing." },
+    housing: { buy: 970000, rentAvail: .65, buyAvail: .55,
+      rentNote: "The highest vacancy of the mainland capitals; rents are high but findable.",
+      buyNote: "Steady public-service demand keeps prices firm but rarely frenzied." }
   },
   {
     id: "sunshinecoast", name: "Sunshine Coast", state: "QLD",
@@ -118,7 +156,12 @@ const CITIES = [
     hobbies: { surf: .95, hike: .8, arts: .5, music: .5, sport: .6, food: .7, dive: .7, camp: .85, snow: 0 },
     hobbyHighlights: { surf: "Noosa's point breaks and 60 km of beaches", hike: "Glass House Mountains and Noosa National Park" },
     social: { buzz: .35, balanced: .7, quiet: .9 },
-    socialNote: "Relaxed beach-town living with a sizeable Kiwi community; nightlife is limited by design."
+    socialNote: "Relaxed beach-town living with a sizeable Kiwi community; nightlife is limited by design.",
+    family: { score: .8, note: "Beachside family lifestyle with good schools; local university options are limited." },
+    pets: { score: .85, note: "Yards, beaches and acreage within reach; pet-friendly rentals go fast." },
+    housing: { buy: 1100000, rentAvail: .3, buyAvail: .35,
+      rentNote: "Sea-changers keep vacancy tight and rents close to capital-city levels.",
+      buyNote: "Lifestyle demand has pushed prices past most capitals; stock is limited." }
   },
   {
     id: "hobart", name: "Hobart", state: "TAS",
@@ -131,7 +174,12 @@ const CITIES = [
     hobbies: { surf: .4, hike: 1, arts: .8, music: .6, sport: .5, food: .8, dive: .5, camp: .9, snow: .3 },
     hobbyHighlights: { hike: "kunanyi/Mt Wellington above town and world-heritage wilderness beyond", arts: "MONA and Dark Mofo punch far above the city's size" },
     social: { buzz: .4, balanced: .75, quiet: .9 },
-    socialNote: "Small, creative and outdoorsy, the closest thing to South Island life in Australia."
+    socialNote: "Small, creative and outdoorsy, the closest thing to South Island life in Australia.",
+    family: { score: .7, note: "Safe, small and outdoorsy with UTAS on hand; fewer school and childcare options than the mainland." },
+    pets: { score: .8, note: "Cool climate, walking trails and yard stock suit dogs well; the rental pool is just small." },
+    housing: { buy: 700000, rentAvail: .5, buyAvail: .55,
+      rentNote: "The post-2020 squeeze has eased; rents are the lowest of any capital here.",
+      buyNote: "The most affordable capital market, with character homes still under $700k." }
   },
   {
     id: "darwin", name: "Darwin", state: "NT",
@@ -144,7 +192,12 @@ const CITIES = [
     hobbies: { surf: .1, hike: .7, arts: .5, music: .5, sport: .5, food: .6, dive: .5, camp: .9, snow: 0 },
     hobbyHighlights: { camp: "Kakadu and Litchfield national parks within two hours", surf: "Swimming and surf are limited; crocodiles and stingers are real" },
     social: { buzz: .5, balanced: .7, quiet: .7 },
-    socialNote: "Transient, friendly and informal. Easy to meet people, harder to keep them as folks move on."
+    socialNote: "Transient, friendly and informal. Easy to meet people, harder to keep them as folks move on.",
+    family: { score: .55, note: "Friendly expat family scene, but school choice is limited and many families move south for high school." },
+    pets: { score: .6, note: "Yards are standard, but heat, humidity and wildlife (snakes, crocs near water) are real considerations." },
+    housing: { buy: 580000, rentAvail: .55, buyAvail: .7,
+      rentNote: "Defence turnover keeps rentals moving; high rents for the price of the houses.",
+      buyNote: "The cheapest capital houses in Australia, if you can commit to the tropics." }
   },
   {
     id: "newcastle", name: "Newcastle", state: "NSW",
@@ -157,7 +210,12 @@ const CITIES = [
     hobbies: { surf: .9, hike: .7, arts: .6, music: .7, sport: .7, food: .7, dive: .6, camp: .75, snow: .3 },
     hobbyHighlights: { surf: "City beaches with genuine surf culture; Merewether is a national surfing reserve" },
     social: { buzz: .55, balanced: .85, quiet: .75 },
-    socialNote: "Genuine surf-city community feel: big enough to have a scene, small enough to be known in it."
+    socialNote: "Genuine surf-city community feel: big enough to have a scene, small enough to be known in it.",
+    family: { score: .8, note: "Backyard suburbs, good schools and a strong university, with Sydney's options two hours away." },
+    pets: { score: .8, note: "Off-leash beaches, yard stock and a dog-friendly cafe culture." },
+    housing: { buy: 950000, rentAvail: .35, buyAvail: .45,
+      rentNote: "Sydney escapees keep vacancy tight, but rents undercut Sydney by a third.",
+      buyNote: "Family houses at two-thirds of Sydney prices, with demand to match." }
   },
   {
     id: "cairns", name: "Cairns", state: "QLD",
@@ -170,7 +228,12 @@ const CITIES = [
     hobbies: { surf: .3, hike: .8, arts: .4, music: .5, sport: .5, food: .6, dive: 1, camp: .85, snow: 0 },
     hobbyHighlights: { dive: "The Great Barrier Reef is the day-trip", hike: "Daintree rainforest and the Atherton Tablelands" },
     social: { buzz: .45, balanced: .7, quiet: .8 },
-    socialNote: "Small, tropical and tourism-driven: sociable and transient, with a solid Kiwi contingent."
+    socialNote: "Small, tropical and tourism-driven: sociable and transient, with a solid Kiwi contingent.",
+    family: { score: .6, note: "An outdoor childhood paradise; school and university choice is limited, with boarding common later on." },
+    pets: { score: .65, note: "Yards are common, but tropical heat, ticks and crocodile-risk waterways constrain dog life." },
+    housing: { buy: 550000, rentAvail: .25, buyAvail: .6,
+      rentNote: "Tourism workers compete hard for a small rental pool.",
+      buyNote: "Among the cheapest houses on this list; cyclone-rated insurance adds cost." }
   }
 ];
 
@@ -221,8 +284,14 @@ const KIWI_IMPORTANCE = [
   { id: "low", label: "Not a factor", desc: "I'll make friends anywhere" }
 ];
 
-const COST_IMPORTANCE = [
-  { id: "high", label: "A lot", desc: "Rent and living costs are a big factor" },
-  { id: "some", label: "Somewhat", desc: "I'd like value but I'm flexible" },
-  { id: "low", label: "Not much", desc: "I'll pay for the right place" }
+const FAMILY_OPTIONS = [
+  { id: "solo", label: "Just me (or us two)", desc: "No kids or pets making the trip" },
+  { id: "kids", label: "With kids", desc: "Schools, childcare and family life matter" },
+  { id: "pets", label: "With pets", desc: "Pet-friendly housing and lifestyle matter" },
+  { id: "both", label: "Kids and pets", desc: "The whole household is coming" }
+];
+
+const HOUSING_OPTIONS = [
+  { id: "rent", label: "Renting", desc: "Compare my budget against local rents and vacancy" },
+  { id: "buy", label: "Buying", desc: "Compare my budget against local house prices" }
 ];

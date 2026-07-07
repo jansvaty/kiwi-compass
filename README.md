@@ -2,7 +2,7 @@
 
 *Find your place across the ditch.*
 
-A minimalist web app for New Zealanders weighing up a move to Australia. Answer five quick questions — field of work, hobbies, holiday travel, social life, cost sensitivity — and get a ranked percentage match for 12 Australian cities, with plain-English reasoning and a source for every factor.
+A minimalist web app for New Zealanders weighing up a move to Australia. Answer six quick questions — field of work, hobbies, holiday travel, social life, who's coming with you (kids/pets), and your rent-or-buy budget — and get a ranked percentage match for 12 Australian cities, with plain-English reasoning and a source for every factor.
 
 ## Run it
 
@@ -18,16 +18,18 @@ python3 -m http.server 4173
 
 ## How the matching works
 
-Each city gets a weighted score out of 100 across six factors:
+Each city gets a weighted score out of 100 across up to eight factors:
 
-| Factor | Base weight | Driven by |
+| Factor | Weight | Driven by |
 |---|---|---|
-| Career fit | 30 | Employment strength for your field (ABS employment by industry) |
-| Lifestyle & hobbies | 24 | City geography, venues, BOM climate averages |
-| Social life | 15 | Fit against your preferred social style |
+| Career fit | 28 | Employment strength for your field (ABS employment by industry) |
+| Lifestyle & hobbies | 20 | City geography, venues, BOM climate averages |
+| Family & schools | 12 (only with kids) | Schools, education options and family-friendliness (ACARA/city profile) |
+| Pets | 7 (only with pets) | Pet-friendly tenancy rules, housing stock and lifestyle |
+| Social life | 13 | Fit against your preferred social style |
 | Kiwi community | 2–14 | NZ-born residents, ABS Census 2021 — weight follows how much you said it matters |
-| Travel connections | 10 | Direct international route coverage from the local airport (2025) |
-| Affordability | 3–16 | Median advertised rent — weight follows your cost sensitivity |
+| Travel connections | 9 | Direct international route coverage from the local airport (2025) |
+| Housing fit | 14 | Your rent-or-buy budget (slider) against median rents/house prices and market availability |
 
 Every factor in the results shows its reasoning and its data source.
 
