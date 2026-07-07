@@ -361,9 +361,9 @@ footer a { color: var(--accent); font-weight: 600; }
   .factors { grid-template-columns: 1fr 1fr; }
 }
 
-/* Wider home layout on larger screens */
+/* Wider layout on larger screens */
 @media (min-width: 900px) {
-  .home header, .home main, .home footer { max-width: 1000px; }
+  header, main, footer { max-width: 1000px; }
   .home section { margin-top: 56px; }
   .factors { grid-template-columns: repeat(3, 1fr); }
   .sources { grid-template-columns: 1fr 1fr; }

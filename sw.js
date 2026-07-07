@@ -1,4 +1,4 @@
-const CACHE = "kiwi-compass-v12";
+const CACHE = "kiwi-compass-v13";
 const ASSETS = [
   ".",
   "index.html",
