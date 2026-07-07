@@ -118,7 +118,9 @@ function renderResults() {
                 </div>
                 <div class="meter"><div style="width:${f.score * 100}%"></div></div>
                 <p>${f.reason}</p>
-                <p class="source">Source: ${f.source}</p>
+                <p class="source">Source: ${f.sourceUrl
+                  ? `<a href="${f.sourceUrl}" target="_blank" rel="noopener">${f.source}</a>`
+                  : f.source}</p>
               </div>
             `).join("")}
           </div>

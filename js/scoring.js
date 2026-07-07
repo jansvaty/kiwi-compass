@@ -37,7 +37,8 @@ function scoreCity(city, prefs) {
   breakdown.push({
     key: "career", label: "Career fit", score: career,
     reason: `${careerAdjective(career)} for ${midSentence(workLabel)}. ${city.economy}`,
-    source: "ABS employment by industry"
+    source: "ABS employment by industry",
+    sourceUrl: "https://www.abs.gov.au/statistics/labour/employment-and-unemployment"
   });
 
   // 2. Hobbies & lifestyle
@@ -63,7 +64,8 @@ function scoreCity(city, prefs) {
   breakdown.push({
     key: "hobbies", label: "Lifestyle & hobbies", score: hobbyScore,
     reason: hobbyReason.trim(),
-    source: "City profile + BOM climate averages"
+    source: "City profile + BOM climate averages",
+    sourceUrl: "http://www.bom.gov.au/climate/data/"
   });
 
   // 3. Social scene
@@ -80,7 +82,8 @@ function scoreCity(city, prefs) {
   breakdown.push({
     key: "kiwi", label: "Kiwi community", score: kiwiScore,
     reason: `${k.text}.`,
-    source: "ABS Census 2021 (country of birth)"
+    source: "ABS Census 2021 (country of birth)",
+    sourceUrl: "https://www.abs.gov.au/census"
   });
 
   // 5. Travel connections
@@ -92,7 +95,8 @@ function scoreCity(city, prefs) {
   breakdown.push({
     key: "travel", label: "Travel connections", score: travel,
     reason: travelReason,
-    source: "Scheduled international routes, 2025"
+    source: "Scheduled international routes, 2025 (BITRE)",
+    sourceUrl: "https://www.bitre.gov.au/statistics/aviation/international"
   });
 
   // 6. Affordability
@@ -100,7 +104,8 @@ function scoreCity(city, prefs) {
   breakdown.push({
     key: "afford", label: "Affordability", score: afford,
     reason: `Median advertised rent around $${city.rent}/week.`,
-    source: "Rental market snapshot, 2025 (indicative)"
+    source: "Rental market snapshot, 2025 (indicative)",
+    sourceUrl: "https://www.abs.gov.au/statistics/people/housing"
   });
 
   // Weights — adjusted by how much the user cares about Kiwi community and cost

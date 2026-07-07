@@ -222,6 +222,12 @@ button.ghost {
   margin-top: 2px;
 }
 
+.factor .source a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .disclaimer {
   color: var(--muted);
   font-size: 12.5px;
