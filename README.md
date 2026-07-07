@@ -2,7 +2,7 @@
 
 *Find your place across the ditch.*
 
-A minimalist web app for New Zealanders weighing up a move to Australia. Answer six quick questions — field of work, hobbies, holiday travel, social life, who's coming with you (kids/pets), and your rent-or-buy budget — and get a ranked percentage match for 12 Australian cities, with plain-English reasoning and a source for every factor.
+A minimalist web app for New Zealanders weighing up a move to Australia. Answer six quick questions - field of work, hobbies, holiday travel, social life, who's coming with you (kids/pets), and your rent-or-buy budget, and get a ranked percentage match for 12 Australian cities, with plain-English reasoning and a source for every factor.
 
 ## Run it
 
