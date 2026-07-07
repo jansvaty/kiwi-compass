@@ -19,36 +19,37 @@ body {
 }
 
 header {
-  padding: 28px 20px 0;
+  padding: 18px 20px 0;
   max-width: 640px;
   margin: 0 auto;
 }
 
 header h1 {
-  font-size: 20px;
+  font-size: 17px;
   margin: 0;
   letter-spacing: -0.02em;
+  line-height: 1.25;
 }
 
 header h1 span { color: var(--accent); }
 
 header p {
-  margin: 2px 0 0;
+  margin: 1px 0 0;
   color: var(--muted);
-  font-size: 14px;
+  font-size: 12.5px;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 13px;
+  gap: 9px;
   text-decoration: none;
   color: inherit;
 }
 
 .logo {
-  width: 46px;
-  height: 46px;
+  width: 27px;
+  height: 27px;
   flex: none;
 }
 
