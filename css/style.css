@@ -245,7 +245,7 @@ button.ghost {
 
 .hero h2 .line2 { display: block; }
 
-.home p { color: #3a3a36; max-width: 56ch; }
+.home p { color: #3a3a36; }
 .home h3 { font-size: 20px; letter-spacing: -0.01em; margin: 0 0 8px; }
 
 .cta {
@@ -306,7 +306,6 @@ footer a { color: var(--accent); font-weight: 600; }
 @media (min-width: 900px) {
   .home header, .home main, .home footer { max-width: 1000px; }
   .home section { margin-top: 56px; }
-  .home p { max-width: 70ch; }
   .factors { grid-template-columns: repeat(3, 1fr); }
   .sources { grid-template-columns: 1fr 1fr; }
 }
