@@ -2,7 +2,7 @@
   "name": "Kiwi Compass",
   "short_name": "Kiwi Compass",
   "description": "Find the Australian city where you'd be happiest — matched on work, hobbies, travel and social life.",
-  "start_url": ".",
+  "start_url": "app.html",
   "display": "standalone",
   "background_color": "#fafaf8",
   "theme_color": "#0f3d3e",

@@ -51,7 +51,8 @@ Two stages:
 ## Structure
 
 ```
-index.html            app shell + PWA meta
+index.html            home page — intent, method, data sources
+app.html              the questionnaire app shell
 css/style.css         all styling (CSS variables for theming)
 js/data.js            city dataset + question definitions (sources documented inline)
 js/scoring.js         matching engine + reasoning generation

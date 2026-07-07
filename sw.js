@@ -1,7 +1,8 @@
-const CACHE = "kiwi-compass-v2";
+const CACHE = "kiwi-compass-v3";
 const ASSETS = [
   ".",
   "index.html",
+  "app.html",
   "css/style.css",
   "js/data.js",
   "js/scoring.js",

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Kiwi Compass — find your place across the ditch</title>
-  <meta name="description" content="Match your work, hobbies, travel and social life against Australian cities and find where you'd thrive.">
+  <meta name="description" content="A city-matching tool for New Zealanders moving to Australia. Match your work, hobbies, travel and social life against 12 Australian cities — with the reasoning shown for every score.">
   <meta name="theme-color" content="#0f3d3e">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -13,16 +13,92 @@
   <meta name="apple-mobile-web-app-title" content="Kiwi Compass">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="home">
   <header>
     <h1>Kiwi <span>Compass</span></h1>
     <p>Find your place across the ditch</p>
   </header>
-  <main id="app">
-    <noscript>Kiwi Compass needs JavaScript to run.</noscript>
+
+  <main>
+    <section class="hero">
+      <h2>Moving to Australia is the easy part.<br>Picking the right city isn't.</h2>
+      <p>
+        Around 700,000 New Zealanders live across the ditch, and thousands more make the move
+        every year — most defaulting to Sydney, Melbourne or wherever their cousins landed.
+        But the city that suits a surfing sparkie is not the city that suits a gallery-going
+        analyst who flies home every Christmas.
+      </p>
+      <p>
+        Kiwi Compass matches <em>who you are</em> — your field of work, your hobbies, where you
+        holiday, and the social life you want — against the reality of twelve Australian cities.
+        You get a ranked percentage match, and more importantly, the <strong>reasoning behind
+        every score</strong>, so you can weigh it up yourself rather than trust a black box.
+      </p>
+      <a class="cta" href="app.html">Find my match →</a>
+      <p class="cta-note">Five questions, about a minute. Nothing is stored or sent anywhere.</p>
+    </section>
+
+    <section>
+      <h3>How the matching works</h3>
+      <p>
+        Each city is scored out of 100 across six weighted factors. Career fit carries the most
+        weight, and two factors flex to match you: how much a Kiwi community matters, and how
+        sensitive you are to living costs.
+      </p>
+      <ul class="factors">
+        <li><strong>Career fit</strong><span>employment strength for your field in that city</span></li>
+        <li><strong>Lifestyle &amp; hobbies</strong><span>geography, climate and venues for what you love doing</span></li>
+        <li><strong>Social life</strong><span>fit against the pace and scene you actually want</span></li>
+        <li><strong>Kiwi community</strong><span>NZ-born residents, as counted in the Census</span></li>
+        <li><strong>Travel connections</strong><span>direct flights to the places you holiday — including home</span></li>
+        <li><strong>Affordability</strong><span>median rents, weighted by how much cost matters to you</span></li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>Where the data comes from</h3>
+      <p>
+        Every factor in your results names its source. The city profiles are compiled from
+        official Australian data:
+      </p>
+      <ul class="sources">
+        <li>
+          <strong><a href="https://www.abs.gov.au/census" rel="noopener">ABS Census 2021</a></strong>
+          <span>NZ-born population of each city (country of birth), driving the Kiwi-community factor</span>
+        </li>
+        <li>
+          <strong><a href="https://www.abs.gov.au/statistics/labour" rel="noopener">ABS labour statistics</a></strong>
+          <span>employment by industry and region, driving the career-fit factor</span>
+        </li>
+        <li>
+          <strong><a href="http://www.bom.gov.au/climate/data/" rel="noopener">Bureau of Meteorology</a></strong>
+          <span>30-year climate averages — temperatures, rainfall and sunshine hours</span>
+        </li>
+        <li>
+          <strong>Scheduled airline routes, 2025</strong>
+          <span>direct international coverage from each city's airport, driving the travel factor</span>
+        </li>
+      </ul>
+      <p class="fineprint">
+        Honesty matters more than polish: the dataset is an <strong>indicative snapshot</strong> —
+        figures are rounded and compiled at a point in time, not fetched live. A future version
+        will refresh it automatically from the
+        <a href="https://api.data.abs.gov.au" rel="noopener">ABS Data API</a>. Use the results to
+        shortlist and compare, then verify the numbers before you book the one-way ticket.
+      </p>
+    </section>
+
+    <section class="cta-bottom">
+      <a class="cta" href="app.html">Find my match →</a>
+    </section>
   </main>
-  <script src="js/data.js"></script>
-  <script src="js/scoring.js"></script>
-  <script src="js/app.js"></script>
+
+  <footer>
+    <p>Designed and built by <a href="https://jansvaty.com" rel="noopener">Jan Svaty</a> — UX designer, Wellington NZ.</p>
+  </footer>
+
+  <script>
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+  </script>
 </body>
 </html>
