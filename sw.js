@@ -1,12 +1,12 @@
-const CACHE = "kiwi-compass-v16";
+const CACHE = "kiwi-compass-v17";
 const ASSETS = [
   ".",
   "index.html",
   "app.html",
-  "css/style.css",
-  "js/data.js",
-  "js/scoring.js",
-  "js/app.js",
+  "css/style.css?v=17",
+  "js/data.js?v=17",
+  "js/scoring.js?v=17",
+  "js/app.js?v=17",
   "manifest.webmanifest",
   "icons/logo.svg",
   "icons/icon-180.png",
@@ -27,10 +27,11 @@ self.addEventListener("activate", e => {
   self.clients.claim();
 });
 
-// Network-first so updates land immediately; cache is the offline fallback.
+// Network-first (revalidating past the HTTP cache) so updates land
+// immediately; the cache is the offline fallback.
 self.addEventListener("fetch", e => {
   e.respondWith(
-    fetch(e.request)
+    fetch(e.request, { cache: "no-cache" })
       .then(res => {
         const copy = res.clone();
         caches.open(CACHE).then(c => c.put(e.request, copy));
