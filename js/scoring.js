@@ -156,27 +156,22 @@ function scoreCity(city, prefs) {
   });
 
   // 9. Pathway fit: how well the city supports the reason for the move
-  const pathScore = prefs.purpose === "citizenship"
-    ? city.pathways.settle
-    : city.pathways[prefs.purpose] ?? 0.6;
+  const settling = prefs.purpose === "settle";
+  const pathScore = city.pathways[prefs.purpose] ?? 0.6;
   const purposeLabel = PURPOSE_OPTIONS.find(p => p.id === prefs.purpose)?.label ?? "your plan";
   const pathAdj = pathScore >= 0.85 ? "One of the easiest bases"
     : pathScore >= 0.7 ? "A strong base"
     : pathScore >= 0.55 ? "A workable base"
     : "A harder base";
   let pathReason = `${pathAdj} for ${midSentence(purposeLabel)}. ${city.pathways.note}`;
-  if (prefs.purpose === "citizenship") {
-    pathReason += " The four-year direct citizenship pathway for NZ citizens is the same nationwide; what differs is how easily you can build the stable residence behind it.";
+  if (settling) {
+    pathReason += " If citizenship is the goal, the four-year direct pathway for NZ citizens is the same nationwide; what differs is how easily you can build the stable residence behind it.";
   }
   breakdown.push({
     key: "pathway", label: "Pathway fit", score: pathScore,
     reason: pathReason,
-    source: prefs.purpose === "citizenship"
-      ? "Dept of Home Affairs + city profile"
-      : "City profile",
-    sourceUrl: prefs.purpose === "citizenship"
-      ? "https://immi.homeaffairs.gov.au/citizenship"
-      : undefined
+    source: settling ? "Dept of Home Affairs + city profile" : "City profile",
+    sourceUrl: settling ? "https://immi.homeaffairs.gov.au/citizenship" : undefined
   });
 
   // 10. Housing fit: the user's budget against this city's market
@@ -214,5 +209,13 @@ function scoreCity(city, prefs) {
 }
 
 function scoreCities(prefs) {
-  return CITIES.map(c => scoreCity(c, prefs)).sort((a, b) => b.percent - a.percent);
+  const results = CITIES.map(c => scoreCity(c, prefs)).sort((a, b) => b.percent - a.percent);
+  // Presentation spread: raw scores tend to bunch in a narrow band, which
+  // makes close calls hard to compare. Keep the leader's score as-is and
+  // widen every gap below it by 1.8x so the ranking reads decisively.
+  const top = results[0].percent;
+  for (const r of results) {
+    r.percent = Math.max(2, Math.round(top - (top - r.percent) * 1.8));
+  }
+  return results;
 }

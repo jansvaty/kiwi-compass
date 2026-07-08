@@ -42,7 +42,7 @@ const steps = [
     hint: "We match this against employment strength in each city.",
     valid: () => state.work !== null,
     render() {
-      return `<div class="grid">${WORK_FIELDS.map(w => `
+      return `<div class="grid grid-4">${WORK_FIELDS.map(w => `
         <button class="opt ${state.work === w.id ? "sel" : ""}" aria-pressed="${state.work === w.id}" data-work="${w.id}">${w.label}</button>
       `).join("")}</div>`;
     }
@@ -157,6 +157,7 @@ const steps = [
             <label for="w-${f.key}">${f.label}</label>
             <output id="wo-${f.key}" for="w-${f.key}">${state.importance[f.key]}</output>
           </div>
+          ${f.hint ? `<p class="weight-hint">${f.hint}</p>` : ""}
           <input type="range" id="w-${f.key}" data-imp="${f.key}" min="0" max="10" step="1"
             value="${state.importance[f.key]}" aria-valuetext="${state.importance[f.key]} out of 10">
         </div>

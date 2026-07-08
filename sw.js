@@ -1,13 +1,14 @@
-const CACHE = "kiwi-compass-v19";
+const CACHE = "kiwi-compass-v20";
 const ASSETS = [
   ".",
   "index.html",
   "app.html",
-  "css/style.css?v=19",
-  "js/data.js?v=19",
-  "js/scoring.js?v=19",
-  "js/app.js?v=19",
-  "js/theme.js?v=19",
+  "about.html",
+  "css/style.css?v=20",
+  "js/data.js?v=20",
+  "js/scoring.js?v=20",
+  "js/app.js?v=20",
+  "js/theme.js?v=20",
   "manifest.webmanifest",
   "icons/logo.svg",
   "icons/icon-180.png",

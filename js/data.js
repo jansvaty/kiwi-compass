@@ -29,7 +29,7 @@ const CITIES = [
     economy: "Australia's largest economy and its finance and tech capital.",
     industries: { healthcare: .8, construction: .8, tech: 1, education: .8, finance: 1, mining: .2, hospitality: .8, government: .6, creative: .9, manufacturing: .5, agriculture: .1, retail: .85 },
     climate: "Warm humid summers (~26°C), mild winters (~17°C), about 2,600 sunshine hours a year.",
-    flights: { nz: 1, asia: 1, europe: .7, usa: 1, pacific: 1 },
+    flights: { nz: 1, asia: 1, europe: .7, usa: 1, pacific: 1, africa: .7, southam: .7 },
     flightNote: "Australia's biggest international hub, with direct flights to all NZ main centres, the USA, Asia and the Pacific. Europe is one stop.",
     hobbies: { surf: 1, hike: .85, arts: .95, music: .9, sport: .95, food: .95, dive: .6, camp: .7, snow: .55 },
     hobbyHighlights: { surf: "100+ ocean beaches from Palm Beach to Cronulla", hike: "Blue Mountains and Royal National Park on the doorstep", snow: "Snowy Mountains ~5.5 hrs away" },
@@ -53,7 +53,7 @@ const CITIES = [
     economy: "Cultural and events capital with deep education, creative and professional sectors.",
     industries: { healthcare: .9, construction: .9, tech: .9, education: 1, finance: .9, mining: .2, hospitality: .9, government: .6, creative: 1, manufacturing: .7, agriculture: .2, retail: .85 },
     climate: "Four-seasons-in-a-day: warm summers (~26°C), cool winters (~14°C), ~2,200 sunshine hours.",
-    flights: { nz: 1, asia: 1, europe: .65, usa: .9, pacific: .7 },
+    flights: { nz: 1, asia: 1, europe: .65, usa: .9, pacific: .7, africa: .3, southam: .35 },
     flightNote: "Second-largest hub, with direct flights to NZ, Asia and the USA. Europe and most Pacific islands are one stop.",
     hobbies: { surf: .6, hike: .7, arts: 1, music: 1, sport: 1, food: 1, dive: .4, camp: .7, snow: .6 },
     hobbyHighlights: { arts: "Australia's gallery, theatre and festival capital", music: "More live-music venues per capita than any Australian city", sport: "MCG, AFL, Australian Open and F1 on home turf" },
@@ -77,7 +77,7 @@ const CITIES = [
     economy: "Fast-growing capital with a 2032 Olympics construction and infrastructure boom.",
     industries: { healthcare: .9, construction: .95, tech: .7, education: .8, finance: .6, mining: .6, hospitality: .8, government: .7, creative: .6, manufacturing: .6, agriculture: .3, retail: .8 },
     climate: "Subtropical: hot summers (~29°C), dry sunny winters (~21°C), ~2,800 sunshine hours.",
-    flights: { nz: 1, asia: .85, europe: .55, usa: .85, pacific: .85 },
+    flights: { nz: 1, asia: .85, europe: .55, usa: .85, pacific: .85, africa: .2, southam: .25 },
     flightNote: "Direct flights to NZ, the USA, much of Asia and the Pacific from a growing hub.",
     hobbies: { surf: .7, hike: .75, arts: .7, music: .75, sport: .85, food: .8, dive: .7, camp: .8, snow: .1 },
     hobbyHighlights: { surf: "Gold Coast and Sunshine Coast breaks within an hour" },
@@ -101,7 +101,7 @@ const CITIES = [
     economy: "A resources powerhouse where mining, energy and engineering wages lead the country.",
     industries: { healthcare: .8, construction: .9, tech: .6, education: .7, finance: .6, mining: 1, hospitality: .7, government: .6, creative: .5, manufacturing: .6, agriculture: .4, retail: .75 },
     climate: "Mediterranean: hot dry summers (~31°C), mild wet winters (~19°C), Australia's sunniest capital (~3,200 hrs).",
-    flights: { nz: .8, asia: 1, europe: 1, usa: .3, pacific: .2 },
+    flights: { nz: .8, asia: 1, europe: 1, usa: .3, pacific: .2, africa: .6, southam: .1 },
     flightNote: "The only Australian city with non-stop flights to Europe (London, Paris, Rome); excellent Asia links, direct to Auckland.",
     hobbies: { surf: .9, hike: .7, arts: .65, music: .7, sport: .75, food: .8, dive: .8, camp: .8, snow: 0 },
     hobbyHighlights: { surf: "Consistent Indian Ocean swell, Margaret River 3 hrs south", dive: "Rottnest and Ningaloo within reach" },
@@ -125,7 +125,7 @@ const CITIES = [
     economy: "Defence, space and advanced manufacturing hub with a famous wine and festival scene.",
     industries: { healthcare: .8, construction: .7, tech: .65, education: .8, finance: .5, mining: .5, hospitality: .7, government: .7, creative: .6, manufacturing: .8, agriculture: .7, retail: .7 },
     climate: "Mediterranean: hot dry summers (~29°C), mild winters (~16°C), ~2,500 sunshine hours.",
-    flights: { nz: .6, asia: .7, europe: .5, usa: .2, pacific: .1 },
+    flights: { nz: .6, asia: .7, europe: .5, usa: .2, pacific: .1, africa: .15, southam: .1 },
     flightNote: "Direct to Auckland and several Asian hubs; most long-haul is one-stop via Melbourne or Singapore.",
     hobbies: { surf: .6, hike: .75, arts: .8, music: .75, sport: .75, food: .85, dive: .6, camp: .8, snow: .05 },
     hobbyHighlights: { food: "Barossa and McLaren Vale wine regions under an hour away", arts: "Adelaide Festival and Fringe, the world's second-largest fringe" },
@@ -149,7 +149,7 @@ const CITIES = [
     economy: "Tourism, construction and a growing film and health precinct.",
     industries: { healthcare: .7, construction: .85, tech: .5, education: .6, finance: .4, mining: .1, hospitality: 1, government: .4, creative: .6, manufacturing: .4, agriculture: .2, retail: .8 },
     climate: "Subtropical: hot summers (~28°C), sunny mild winters (~21°C), ~2,900 sunshine hours.",
-    flights: { nz: .9, asia: .6, europe: .3, usa: .3, pacific: .4 },
+    flights: { nz: .9, asia: .6, europe: .3, usa: .3, pacific: .4, africa: .1, southam: .1 },
     flightNote: "Direct flights to Auckland and Christchurch; wider long-haul via Brisbane, 45 minutes up the road.",
     hobbies: { surf: 1, hike: .7, arts: .5, music: .7, sport: .7, food: .7, dive: .7, camp: .75, snow: 0 },
     hobbyHighlights: { surf: "World-class point breaks at Snapper, Burleigh and Kirra", hike: "Lamington and Springbrook rainforest in the hinterland" },
@@ -173,7 +173,7 @@ const CITIES = [
     economy: "A government town where the public service, policy, defence and government IT dominate.",
     industries: { healthcare: .7, construction: .6, tech: .7, education: .8, finance: .4, mining: .1, hospitality: .6, government: 1, creative: .5, manufacturing: .3, agriculture: .2, retail: .6 },
     climate: "Continental: warm dry summers (~27°C), cold frosty winters (~12°C days), ~2,600 sunshine hours.",
-    flights: { nz: .2, asia: .2, europe: .2, usa: .1, pacific: .1 },
+    flights: { nz: .2, asia: .2, europe: .2, usa: .1, pacific: .1, africa: .05, southam: .05 },
     flightNote: "Essentially no international routes; everything connects through Sydney or Melbourne.",
     hobbies: { surf: .1, hike: .85, arts: .75, music: .6, sport: .7, food: .75, dive: .1, camp: .8, snow: .8 },
     hobbyHighlights: { snow: "Closest capital to the NSW snowfields (~2.5 hrs)", arts: "National galleries, museums and Parliament on your doorstep" },
@@ -197,7 +197,7 @@ const CITIES = [
     economy: "Health, construction and tourism led, anchored by a major new hospital precinct.",
     industries: { healthcare: .8, construction: .8, tech: .5, education: .5, finance: .3, mining: .1, hospitality: .9, government: .4, creative: .4, manufacturing: .4, agriculture: .4, retail: .7 },
     climate: "Subtropical: warm summers (~28°C), mild sunny winters (~21°C), ~2,800 sunshine hours.",
-    flights: { nz: .5, asia: .2, europe: .2, usa: .1, pacific: .2 },
+    flights: { nz: .5, asia: .2, europe: .2, usa: .1, pacific: .2, africa: .05, southam: .05 },
     flightNote: "Seasonal direct Auckland flights; otherwise via Brisbane, about 90 minutes south.",
     hobbies: { surf: .95, hike: .8, arts: .5, music: .5, sport: .6, food: .7, dive: .7, camp: .85, snow: 0 },
     hobbyHighlights: { surf: "Noosa's point breaks and 60 km of beaches", hike: "Glass House Mountains and Noosa National Park" },
@@ -221,7 +221,7 @@ const CITIES = [
     economy: "Tourism, Antarctic science, aquaculture and a university-anchored economy.",
     industries: { healthcare: .7, construction: .6, tech: .4, education: .7, finance: .3, mining: .3, hospitality: .8, government: .6, creative: .6, manufacturing: .4, agriculture: .7, retail: .6 },
     climate: "Cool temperate: mild summers (~22°C), crisp winters (~12°C), the most NZ-like climate on the list.",
-    flights: { nz: .1, asia: .1, europe: .1, usa: .1, pacific: .1 },
+    flights: { nz: .1, asia: .1, europe: .1, usa: .1, pacific: .1, africa: .05, southam: .05 },
     flightNote: "No scheduled international routes; connect via Melbourne or Sydney.",
     hobbies: { surf: .4, hike: 1, arts: .8, music: .6, sport: .5, food: .8, dive: .5, camp: .9, snow: .3 },
     hobbyHighlights: { hike: "kunanyi/Mt Wellington above town and world-heritage wilderness beyond", arts: "MONA and Dark Mofo punch far above the city's size" },
@@ -245,7 +245,7 @@ const CITIES = [
     economy: "Government, defence, energy and the gateway to Asia. High wages, high turnover.",
     industries: { healthcare: .7, construction: .7, tech: .4, education: .5, finance: .3, mining: .8, hospitality: .7, government: .8, creative: .3, manufacturing: .3, agriculture: .4, retail: .6 },
     climate: "Tropical: hot year-round (~32°C), a humid wet season from November to April and a glorious dry season.",
-    flights: { nz: .1, asia: .8, europe: .3, usa: .1, pacific: .1 },
+    flights: { nz: .1, asia: .8, europe: .3, usa: .1, pacific: .1, africa: .1, southam: .05 },
     flightNote: "Closer to Bali and Singapore than to Sydney, with direct Asian routes but no NZ flights.",
     hobbies: { surf: .1, hike: .7, arts: .5, music: .5, sport: .5, food: .6, dive: .5, camp: .9, snow: 0 },
     hobbyHighlights: { camp: "Kakadu and Litchfield national parks within two hours", surf: "Swimming and surf are limited; crocodiles and stingers are real" },
@@ -269,7 +269,7 @@ const CITIES = [
     economy: "Former steel city turned health, energy and education hub for the Hunter region.",
     industries: { healthcare: .8, construction: .8, tech: .5, education: .7, finance: .4, mining: .7, hospitality: .7, government: .5, creative: .5, manufacturing: .7, agriculture: .4, retail: .7 },
     climate: "Warm summers (~26°C), mild winters (~17°C), ~2,600 sunshine hours. Sydney's climate at two-thirds the rent.",
-    flights: { nz: .3, asia: .2, europe: .2, usa: .1, pacific: .2 },
+    flights: { nz: .3, asia: .2, europe: .2, usa: .1, pacific: .2, africa: .05, southam: .05 },
     flightNote: "A few short-haul routes; most international travel connects through Sydney, 2 hrs south.",
     hobbies: { surf: .9, hike: .7, arts: .6, music: .7, sport: .7, food: .7, dive: .6, camp: .75, snow: .3 },
     hobbyHighlights: { surf: "City beaches with genuine surf culture; Merewether is a national surfing reserve" },
@@ -293,7 +293,7 @@ const CITIES = [
     economy: "Tourism capital of the tropics, where the Great Barrier Reef and the Daintree drive the economy.",
     industries: { healthcare: .7, construction: .6, tech: .3, education: .5, finance: .3, mining: .2, hospitality: 1, government: .5, creative: .4, manufacturing: .3, agriculture: .6, retail: .6 },
     climate: "Tropical: hot humid summers (~31°C), warm dry winters (~26°C).",
-    flights: { nz: .6, asia: .7, europe: .2, usa: .2, pacific: .3 },
+    flights: { nz: .6, asia: .7, europe: .2, usa: .2, pacific: .3, africa: .05, southam: .05 },
     flightNote: "Direct to Auckland plus Japan, Singapore and Bali. Strong links for a small city.",
     hobbies: { surf: .3, hike: .8, arts: .4, music: .5, sport: .5, food: .6, dive: 1, camp: .85, snow: 0 },
     hobbyHighlights: { dive: "The Great Barrier Reef is the day-trip", hike: "Daintree rainforest and the Atherton Tablelands" },
@@ -333,7 +333,7 @@ const HOBBIES = [
   { id: "hike", label: "Hiking & tramping" },
   { id: "arts", label: "Arts & culture" },
   { id: "music", label: "Live music & nightlife" },
-  { id: "sport", label: "Sport (playing or watching)" },
+  { id: "sport", label: "Any indoor & outdoor sport" },
   { id: "food", label: "Food, coffee & wine" },
   { id: "dive", label: "Diving & snorkelling" },
   { id: "camp", label: "Camping & road trips" },
@@ -345,7 +345,9 @@ const TRAVEL = [
   { id: "asia", label: "Asia (Bali, Japan, SE Asia)" },
   { id: "europe", label: "Europe & UK" },
   { id: "usa", label: "USA & Canada" },
-  { id: "pacific", label: "Pacific Islands" }
+  { id: "pacific", label: "Pacific Islands" },
+  { id: "africa", label: "Africa" },
+  { id: "southam", label: "South America" }
 ];
 
 const SOCIAL_STYLES = [
@@ -373,7 +375,8 @@ const FACTOR_META = [
   { key: "family", label: "Family & schools", short: "Family", when: "kids" },
   { key: "pets", label: "Pets", short: "Pets", when: "pets" },
   { key: "dating", label: "Meeting someone", short: "Dating", when: "connection" },
-  { key: "pathway", label: "Pathway fit", short: "Pathway" },
+  { key: "pathway", label: "Pathway fit", short: "Pathway",
+    hint: "How well the city supports your plan: a working stint, study, or settling long term" },
   { key: "housing", label: "Housing fit", short: "Housing" }
 ];
 
@@ -394,8 +397,7 @@ const HOUSEHOLD_OPTIONS = [
 const PURPOSE_OPTIONS = [
   { id: "temp", label: "Temporarily", desc: "A working stint or adventure, then reassess" },
   { id: "study", label: "To study", desc: "University and training options matter" },
-  { id: "settle", label: "To settle down", desc: "Long-term roots, stability and housing" },
-  { id: "citizenship", label: "Working towards citizenship", desc: "Building the four-year direct pathway for Kiwis" }
+  { id: "settle", label: "Settling down long term", desc: "Roots, stability, and the four-year citizenship pathway for Kiwis" }
 ];
 
 const HOUSING_OPTIONS = [

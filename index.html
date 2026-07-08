@@ -20,7 +20,7 @@
       } catch (e) {}
     })();
   </script>
-  <link rel="stylesheet" href="css/style.css?v=19">
+  <link rel="stylesheet" href="css/style.css?v=20">
 </head>
 <body class="home">
   <header>
@@ -39,7 +39,6 @@
       </svg>
       <div>
         <h1>Kiwi <span>Compass</span></h1>
-        <p>Find your place across the ditch</p>
       </div>
     </div>
     <button id="theme-toggle" class="theme-toggle" aria-label="Switch to light mode">
@@ -71,7 +70,15 @@
     </section>
 
     <section>
-      <h3>How the matching works</h3>
+      <details class="reveal">
+        <summary>
+          <span class="reveal-head">
+            <h3>How the matching works</h3>
+            <p>Up to twelve factors, weighted by you on 0-10 sliders. Tap to see them all.</p>
+          </span>
+          <span class="chev" aria-hidden="true">›</span>
+        </summary>
+        <div class="reveal-body">
       <p>
         Each city is scored out of 100 across up to twelve factors, and you set the weighting
         yourself: after the questions, a slider screen asks how much each factor matters to you
@@ -90,13 +97,23 @@
         <li><strong>Social life</strong><span>fit against the pace and scene you actually want</span></li>
         <li><strong>Kiwi community</strong><span>NZ-born residents, as counted in the Census</span></li>
         <li><strong>Travel connections</strong><span>direct flights to the places you holiday, including trips home</span></li>
-        <li><strong>Pathway fit</strong><span>how well the city supports a stint, study, settling or the citizenship path</span></li>
+        <li><strong>Pathway fit</strong><span>how well the city supports a working stint, study, or settling long term</span></li>
         <li><strong>Housing fit</strong><span>your rent or purchase budget against each city's prices and availability</span></li>
       </ul>
+        </div>
+      </details>
     </section>
 
     <section>
-      <h3>Where the data comes from</h3>
+      <details class="reveal">
+        <summary>
+          <span class="reveal-head">
+            <h3>Where the data comes from</h3>
+            <p>Official Australian sources, cited on every factor. Tap to see them.</p>
+          </span>
+          <span class="chev" aria-hidden="true">›</span>
+        </summary>
+        <div class="reveal-body">
       <p>
         Every factor in your results names its source. The city profiles are compiled from
         official Australian data:
@@ -126,17 +143,30 @@
         <a href="https://api.data.abs.gov.au" rel="noopener">ABS Data API</a>. Use the results to
         shortlist and compare, then verify the numbers before you book the one-way ticket.
       </p>
+        </div>
+      </details>
+    </section>
+
+    <section>
+      <p class="fineprint">
+        <strong>A hint, not a guarantee.</strong> Kiwi Compass can't promise your relocation
+        will be a success. If you already have a job secured, or family and friends waiting for
+        you in Australia, you'll most likely be happiest wherever they are. But if you're
+        starting with a blank sheet and can't decide where to go, your results are exactly
+        that: a hint about where you have a good predisposition to make the move work.
+      </p>
     </section>
 
   </main>
 
   <footer>
-    <p>Designed and built by <a href="https://jansvaty.com" rel="noopener">Jan Svaty</a>, a UX designer in Wellington, NZ.</p>
+    <p>Designed and built by <a href="https://jansvaty.com" rel="noopener">Jan Svaty</a>, a UX designer in Wellington, NZ.
+    <a href="about.html">Why I built Kiwi Compass →</a></p>
   </footer>
 
   <script>
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
   </script>
-  <script src="js/theme.js?v=19"></script>
+  <script src="js/theme.js?v=20"></script>
 </body>
 </html>

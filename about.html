@@ -3,15 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Find your match | Kiwi Compass</title>
-  <meta name="description" content="Answer five quick questions and get a ranked match for 12 Australian cities, with reasoning for every factor.">
+  <title>About | Kiwi Compass</title>
+  <meta name="description" content="Why Kiwi Compass exists: built by a designer who has made the move-to-a-new-city decision seven times, on three continents.">
   <meta name="theme-color" content="#000000">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Kiwi Compass">
   <script>
     (function () {
       try {
@@ -22,7 +19,7 @@
   </script>
   <link rel="stylesheet" href="css/style.css?v=20">
 </head>
-<body>
+<body class="home">
   <header>
     <a href="index.html" class="brand homelink">
       <svg class="logo" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -46,12 +43,41 @@
       <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>
     </button>
   </header>
-  <main id="app">
-    <noscript>Kiwi Compass needs JavaScript to run.</noscript>
+
+  <main>
+    <section class="hero">
+      <h2>I've had to pick a new city with a blank sheet. <span class="line2">More than once.</span></h2>
+      <p>
+        I'm Jan, a designer originally from Prague. More than once I've been in exactly the
+        situation this app is built for: needing to decide where to move with only limited
+        information to go on.
+      </p>
+      <p>
+        The list so far: British Columbia in Canada, then Montreal, then Calgary in Alberta.
+        Puerto Escondido in Mexico. Auckland, then Wellington, in New Zealand. And now I'm
+        eyeing the move across the ditch to Australia.
+      </p>
+      <p>
+        Every one of those moves started the same way: forum threads, out-of-date blog posts,
+        and other people's opinions about places they'd visited once. I always wished there
+        was a tool like Kiwi Compass, something that would take my actual life, work, hobbies,
+        budget, the people coming with me, and give me clear, up-to-date data on what living
+        in each destination would really be like. That wish is what inspired me to build this.
+      </p>
+      <p>
+        If it saves you even one of the wrong turns I've taken, it's done its job.
+      </p>
+      <a class="cta" href="app.html">Find my match →</a>
+    </section>
   </main>
-  <script src="js/data.js?v=20"></script>
-  <script src="js/scoring.js?v=20"></script>
-  <script src="js/app.js?v=20"></script>
+
+  <footer>
+    <p>Designed and built by <a href="https://jansvaty.com" rel="noopener">Jan Svaty</a>, a UX designer in Wellington, NZ.</p>
+  </footer>
+
+  <script>
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+  </script>
   <script src="js/theme.js?v=20"></script>
 </body>
 </html>
