@@ -7,8 +7,9 @@ Usage: python3 scripts/make_icons.py
 """
 import zlib, struct, math, os
 
-BG = (15, 61, 62)       # brand teal #0f3d3e
-FG = (250, 250, 248)    # off-white #fafaf8
+BG = (10, 12, 16)       # near-black ground
+FG = (255, 255, 255)    # white ring
+RED = (225, 57, 64)     # flag red needle #e13940
 DIM = tuple(int(f * 0.55 + b * 0.45) for f, b in zip(FG, BG))  # muted tail
 
 OUT_DIR = os.path.join(os.path.dirname(__file__), "..", "icons")
@@ -50,7 +51,7 @@ def make(size, path):
             if abs(d - RING_R * size) <= RING_W * size / 2:
                 col = FG
             if in_triangle(p, tip, s1, s2):
-                col = FG
+                col = RED
             elif in_triangle(p, tail, s1, s2):
                 col = DIM
             if d <= DOT_R * size:
