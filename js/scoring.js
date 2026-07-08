@@ -85,11 +85,22 @@ function scoreCity(city, prefs) {
     sourceUrl: "http://www.bom.gov.au/climate/data/"
   });
 
-  // 4. Family & schools / pets / meeting someone (only when relevant)
+  // 4. Getting around
+  const t = city.transport;
+  const transport = prefs.transport === "mix"
+    ? (t.transit + t.car + t.active) / 3
+    : t[prefs.transport] ?? 0.5;
+  breakdown.push({
+    key: "transport", label: "Getting around", score: transport,
+    reason: t.note,
+    source: "BITRE urban transport + city profile",
+    sourceUrl: "https://www.bitre.gov.au/statistics"
+  });
+
+  // 5. Family & schools / pets / meeting someone (only when relevant)
   const withKids = prefs.household.has("kids");
   const withPets = prefs.household.has("pets");
   const lookingToMeet = prefs.household.has("connection");
-  const single = prefs.household.has("single");
   if (withKids) {
     breakdown.push({
       key: "family", label: "Family & schools", score: city.family.score,
@@ -113,7 +124,7 @@ function scoreCity(city, prefs) {
     });
   }
 
-  // 5. Social scene
+  // 6. Social scene
   const social = city.social[prefs.social] ?? 0.5;
   breakdown.push({
     key: "social", label: "Social life", score: social,
@@ -121,7 +132,7 @@ function scoreCity(city, prefs) {
     source: "City profile"
   });
 
-  // 6. Kiwi community
+  // 7. Kiwi community
   const k = kiwiStats(city);
   const kiwiScore = Math.min(1, Math.sqrt(k.share / KIWI_SHARE_MAX)); // sqrt: diminishing returns
   breakdown.push({
@@ -131,7 +142,7 @@ function scoreCity(city, prefs) {
     sourceUrl: "https://www.abs.gov.au/census"
   });
 
-  // 7. Travel connections
+  // 8. Travel connections
   let travel = 0.5, travelReason = city.flightNote;
   if (prefs.travel.size > 0) {
     const picked = [...prefs.travel];
@@ -144,7 +155,7 @@ function scoreCity(city, prefs) {
     sourceUrl: "https://www.bitre.gov.au/statistics/aviation/international"
   });
 
-  // 8. Pathway fit: how well the city supports the reason for the move
+  // 9. Pathway fit: how well the city supports the reason for the move
   const pathScore = prefs.purpose === "citizenship"
     ? city.pathways.settle
     : city.pathways[prefs.purpose] ?? 0.6;
@@ -168,7 +179,7 @@ function scoreCity(city, prefs) {
       : undefined
   });
 
-  // 9. Housing fit: the user's budget against this city's market
+  // 10. Housing fit: the user's budget against this city's market
   const buying = prefs.housing === "buy";
   const price = buying ? city.housing.buy : city.rent;
   const priceFit = clamp01((prefs.budget / price - 0.7) / 0.5);
@@ -187,20 +198,15 @@ function scoreCity(city, prefs) {
       : "https://www.abs.gov.au/statistics/people/housing"
   });
 
-  // Weights — kiwi flexes with stated importance; family, pets and dating
-  // only count when relevant; social matters a little more for singles
-  const kiwiW = { high: 14, some: 8, low: 2 }[prefs.kiwi];
-  const weights = {
-    career: 26, hobbies: 16, weather: 10, social: single ? 15 : 12,
-    kiwi: kiwiW, travel: 8, pathway: 10, housing: 13,
-    family: withKids ? 12 : 0, pets: withPets ? 7 : 0,
-    dating: lookingToMeet ? 8 : 0
-  };
-  const totalW = Object.values(weights).reduce((a, b) => a + b, 0);
+  // Weights come straight from the user's 0-10 importance sliders.
+  // A slider at 0 removes that factor from the score entirely.
+  let totalW = breakdown.reduce((sum, f) => sum + (prefs.importance[f.key] ?? 5), 0);
+  if (totalW === 0) totalW = breakdown.length; // all-zero fallback: equal weights
 
   let total = 0;
   for (const f of breakdown) {
-    f.weight = weights[f.key] / totalW;
+    const imp = prefs.importance[f.key] ?? 5;
+    f.weight = (totalW === breakdown.length && imp === 0 ? 1 : imp) / totalW;
     total += f.score * f.weight;
   }
 

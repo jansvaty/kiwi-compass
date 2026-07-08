@@ -1,18 +1,27 @@
 /* Kiwi Compass — minimal step-form UI and results rendering. */
 
+const defaultImportance = () =>
+  Object.fromEntries(FACTOR_META.map(f => [f.key, 5]));
+
 const state = {
   step: 0,
   work: null,
   hobbies: new Set(),
   weather: null,
+  transport: null,
   travel: new Set(),
   social: null,
-  kiwi: "some",
   household: new Set(),
   purpose: null,
   housing: "rent",
-  budget: { rent: 550, buy: 800000 }
+  budget: { rent: 550, buy: 800000 },
+  importance: defaultImportance()
 };
+
+// Factors that apply to this user (conditional ones only when picked)
+function activeFactors() {
+  return FACTOR_META.filter(f => !f.when || state.household.has(f.when));
+}
 
 const BUDGET_RANGE = {
   rent: { min: 300, max: 1000, step: 25 },
@@ -61,6 +70,18 @@ const steps = [
     }
   },
   {
+    title: "How do you like to get around?",
+    hint: "We match this against each city's public transport, traffic and bike-friendliness.",
+    valid: () => state.transport !== null,
+    render() {
+      return `<div class="cards">${TRANSPORT_OPTIONS.map(t => `
+        <button class="card ${state.transport === t.id ? "sel" : ""}" aria-pressed="${state.transport === t.id}" data-transport="${t.id}">
+          <strong>${t.label}</strong><span>${t.desc}</span>
+        </button>
+      `).join("")}</div>`;
+    }
+  },
+  {
     title: "Where do you fly for holidays?",
     hint: "We check direct-flight coverage from each city's airport.",
     valid: () => true,
@@ -78,12 +99,6 @@ const steps = [
       return `<div class="cards">${SOCIAL_STYLES.map(s => `
         <button class="card ${state.social === s.id ? "sel" : ""}" aria-pressed="${state.social === s.id}" data-social="${s.id}">
           <strong>${s.label}</strong><span>${s.desc}</span>
-        </button>
-      `).join("")}</div>
-      <h3 class="sub">Having other Kiwis around?</h3>
-      <div class="cards">${KIWI_IMPORTANCE.map(k => `
-        <button class="card ${state.kiwi === k.id ? "sel" : ""}" aria-pressed="${state.kiwi === k.id}" data-kiwi="${k.id}">
-          <strong>${k.label}</strong><span>${k.desc}</span>
         </button>
       `).join("")}</div>`;
     }
@@ -130,6 +145,23 @@ const steps = [
         <output id="budget-out" for="budget">${fmtBudget()}</output>
       </div>`;
     }
+  },
+  {
+    title: "How much does each one matter?",
+    hint: "0 means ignore it, 10 means top priority. These weights drive your ranking and your profile graph.",
+    valid: () => true,
+    render() {
+      return `<div class="weights">${activeFactors().map(f => `
+        <div class="weight-row">
+          <div class="weight-head">
+            <label for="w-${f.key}">${f.label}</label>
+            <output id="wo-${f.key}" for="w-${f.key}">${state.importance[f.key]}</output>
+          </div>
+          <input type="range" id="w-${f.key}" data-imp="${f.key}" min="0" max="10" step="1"
+            value="${state.importance[f.key]}" aria-valuetext="${state.importance[f.key]} out of 10">
+        </div>
+      `).join("")}</div>`;
+    }
   }
 ];
 
@@ -157,19 +189,65 @@ function render() {
   }
 }
 
+// Spider/radar chart: 0 at the centre, 10 at the rim.
+// series = [{ values (0-10 per axis), cls }]
+function radarChart(axes, series) {
+  const N = axes.length, cx = 210, cy = 168, R = 112;
+  const pt = (i, v) => {
+    const a = -Math.PI / 2 + (i * 2 * Math.PI) / N;
+    return [cx + (R * v / 10) * Math.cos(a), cy + (R * v / 10) * Math.sin(a)];
+  };
+  const poly = vals => vals.map((v, i) => pt(i, v).map(n => n.toFixed(1)).join(",")).join(" ");
+  const rings = [2.5, 5, 7.5, 10].map(r =>
+    `<polygon class="radar-grid" points="${poly(axes.map(() => r))}"/>`).join("");
+  const spokes = axes.map((_, i) => {
+    const [x, y] = pt(i, 10);
+    return `<line class="radar-axis" x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/>`;
+  }).join("");
+  const labels = axes.map((ax, i) => {
+    const [x, y] = pt(i, 11.6);
+    const a = -Math.PI / 2 + (i * 2 * Math.PI) / N;
+    const anchor = Math.cos(a) > 0.35 ? "start" : Math.cos(a) < -0.35 ? "end" : "middle";
+    return `<text class="radar-label" x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="${anchor}">${ax}</text>`;
+  }).join("");
+  const shapes = series.map(s =>
+    `<polygon class="${s.cls}" points="${poly(s.values)}"/>`).join("");
+  return `<svg viewBox="0 0 420 336" role="img"
+    aria-label="Radar graph of your priorities (0 centre to 10 edge) overlaid with your top city's scores">
+    ${rings}${spokes}${shapes}${labels}</svg>`;
+}
+
 function renderResults() {
   const prefs = {
     work: state.work, hobbies: state.hobbies, weather: state.weather,
-    travel: state.travel, social: state.social, kiwi: state.kiwi,
+    transport: state.transport, travel: state.travel, social: state.social,
     household: state.household, purpose: state.purpose,
-    housing: state.housing, budget: state.budget[state.housing]
+    housing: state.housing, budget: state.budget[state.housing],
+    importance: state.importance
   };
   const results = scoreCities(prefs);
   const top = results[0];
+  const axes = activeFactors();
+  const cityScore = key => (top.breakdown.find(f => f.key === key)?.score ?? 0.5) * 10;
+  const radar = radarChart(
+    axes.map(f => f.short),
+    [
+      { values: axes.map(f => cityScore(f.key)), cls: "radar-city" },
+      { values: axes.map(f => state.importance[f.key]), cls: "radar-user" }
+    ]
+  );
   app.innerHTML = `
     <h2 id="step-title" tabindex="-1">Your matches</h2>
-    <p class="hint">Based on your work, hobbies, travel, social life, household and housing budget
-    against each city's profile. Tap a city to see the reasoning.</p>
+    <p class="hint">Weighted by your importance sliders and matched against each city's profile.
+    Tap a city to see the reasoning.</p>
+    <div class="radar-wrap">
+      <h3>Your priorities vs ${top.city.name}</h3>
+      ${radar}
+      <div class="radar-legend">
+        <span class="leg leg-user">Your priorities</span>
+        <span class="leg leg-city">${top.city.name}'s fit</span>
+      </div>
+    </div>
     <div class="results">
       ${results.map((r, i) => `
         <details class="result" ${i === 0 ? "open" : ""}>
@@ -223,8 +301,8 @@ app.addEventListener("click", e => {
     render();
   }
   else if (b.dataset.weather !== undefined) { state.weather = b.dataset.weather; render(); }
+  else if (b.dataset.transport !== undefined) { state.transport = b.dataset.transport; render(); }
   else if (b.dataset.social !== undefined) { state.social = b.dataset.social; render(); }
-  else if (b.dataset.kiwi !== undefined) { state.kiwi = b.dataset.kiwi; render(); }
   else if (b.dataset.who !== undefined) {
     state.household.has(b.dataset.who) ? state.household.delete(b.dataset.who) : state.household.add(b.dataset.who);
     render();
@@ -235,8 +313,9 @@ app.addEventListener("click", e => {
   else if (b.id === "back") { state.step--; focusHeading = true; render(); }
   else if (b.id === "restart") {
     Object.assign(state, {
-      step: 0, work: null, weather: null, social: null, kiwi: "some",
-      purpose: null, housing: "rent", budget: { rent: 550, buy: 800000 }
+      step: 0, work: null, weather: null, transport: null, social: null,
+      purpose: null, housing: "rent", budget: { rent: 550, buy: 800000 },
+      importance: defaultImportance()
     });
     state.hobbies.clear(); state.travel.clear(); state.household.clear();
     focusHeading = true;
@@ -249,6 +328,11 @@ app.addEventListener("input", e => {
     state.budget[state.housing] = +e.target.value;
     e.target.setAttribute("aria-valuetext", fmtBudget());
     document.getElementById("budget-out").textContent = fmtBudget();
+  } else if (e.target.dataset.imp) {
+    const key = e.target.dataset.imp;
+    state.importance[key] = +e.target.value;
+    e.target.setAttribute("aria-valuetext", `${e.target.value} out of 10`);
+    document.getElementById(`wo-${key}`).textContent = e.target.value;
   }
 });
 

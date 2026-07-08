@@ -196,6 +196,86 @@ h2 {
   color: var(--accent);
 }
 
+/* Importance sliders */
+.weights { margin-top: 4px; }
+.weight-row { margin-top: 20px; }
+
+.weight-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-weight: 600;
+  font-size: 14.5px;
+  margin-bottom: 4px;
+}
+.weight-head output {
+  color: var(--accent);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.weight-row input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* Radar graph */
+.radar-wrap {
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 16px 12px;
+  margin-bottom: 18px;
+}
+.radar-wrap h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  text-align: center;
+}
+.radar-wrap svg {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  margin: 0 auto;
+}
+.radar-grid, .radar-axis { fill: none; stroke: var(--line); stroke-width: 1; }
+.radar-user {
+  fill: var(--accent);
+  fill-opacity: .22;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.radar-city {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+  stroke-linejoin: round;
+}
+.radar-label { fill: var(--muted); font-size: 12px; }
+
+.radar-legend {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  font-size: 13px;
+  color: var(--muted);
+  padding: 6px 0 4px;
+}
+.leg::before {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 0;
+  margin-right: 7px;
+  vertical-align: middle;
+}
+.leg-user::before { border-top: 3px solid var(--accent); }
+.leg-city::before { border-top: 3px dashed var(--muted); }
+
 /* Nav */
 .nav {
   display: flex;

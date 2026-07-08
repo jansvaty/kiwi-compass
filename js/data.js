@@ -11,6 +11,7 @@
  *   weather    : fit for each climate preference (0-1, BOM 30-year averages)
  *   dating     : singles scene and ease of meeting people (0-1, city profile)
  *   pathways   : fit for temporary stays, study and settling (0-1, city profile)
+ *   transport  : public transport / driving / walking-cycling quality (0-1, BITRE + city profile)
  *   industries : derived from ABS employment-by-industry regional concentrations (0–1 relative strength)
  *   climate    : Bureau of Meteorology 30-year averages (summarised)
  *   flights    : scheduled international route coverage, 2025 (0–1 per region)
@@ -42,7 +43,9 @@ const CITIES = [
     weather: { mild: .8, hot: .6, tropical: .3, seasonal: .5 },
     dating: { score: .85, note: "Australia's biggest singles pool and endless ways to meet people, though the dating scene moves fast." },
     pathways: { temp: .8, study: .95, settle: .65,
-      note: "The deepest job market and five universities, but costs work against putting down long-term roots." }
+      note: "The deepest job market and five universities, but costs work against putting down long-term roots." },
+    transport: { transit: .85, car: .3, active: .55,
+      note: "The best rail, metro and ferry network in the country; driving means tolls and Australia's worst congestion." }
   },
   {
     id: "melbourne", name: "Melbourne", state: "VIC",
@@ -64,7 +67,9 @@ const CITIES = [
     weather: { mild: .7, hot: .3, tropical: .05, seasonal: 1 },
     dating: { score: .9, note: "A huge, sociable singles scene built around bars, live music and hobby clubs." },
     pathways: { temp: .8, study: 1, settle: .75,
-      note: "Australia's biggest university sector, a deep casual job market and better housing supply for settlers." }
+      note: "Australia's biggest university sector, a deep casual job market and better housing supply for settlers." },
+    transport: { transit: .9, car: .45, active: .7,
+      note: "Trams and trains cover the inner city brilliantly; outer suburbs lean on cars and clogged freeways." }
   },
   {
     id: "brisbane", name: "Brisbane", state: "QLD",
@@ -86,7 +91,9 @@ const CITIES = [
     weather: { mild: .5, hot: .85, tropical: .6, seasonal: .3 },
     dating: { score: .75, note: "A growing young-professional scene with an easier pace than Sydney." },
     pathways: { temp: .75, study: .85, settle: .85,
-      note: "Strong growth, good universities and liveable costs make most pathways straightforward." }
+      note: "Strong growth, good universities and liveable costs make most pathways straightforward." },
+    transport: { transit: .65, car: .55, active: .55,
+      note: "Busways, ferries and a growing rail network do the job; population growth is testing the roads." }
   },
   {
     id: "perth", name: "Perth", state: "WA",
@@ -108,7 +115,9 @@ const CITIES = [
     weather: { mild: .6, hot: .9, tropical: .15, seasonal: .5 },
     dating: { score: .65, note: "A decent scene with a smaller pool; expat and Kiwi circles do a lot of the introducing." },
     pathways: { temp: .7, study: .75, settle: .8,
-      note: "High wages and solid universities; the distance suits committed movers more than short stints." }
+      note: "High wages and solid universities; the distance suits committed movers more than short stints." },
+    transport: { transit: .6, car: .7, active: .55,
+      note: "Fast, clean trains on the main corridors and easier driving than any east-coast capital." }
   },
   {
     id: "adelaide", name: "Adelaide", state: "SA",
@@ -130,7 +139,9 @@ const CITIES = [
     weather: { mild: .65, hot: .8, tropical: .05, seasonal: .7 },
     dating: { score: .55, note: "A smaller pool where social circles overlap quickly; clubs and sport open doors." },
     pathways: { temp: .6, study: .8, settle: .85,
-      note: "Affordable, stable and studenty; one of the easiest cities to build a settled base." }
+      note: "Affordable, stable and studenty; one of the easiest cities to build a settled base." },
+    transport: { transit: .5, car: .85, active: .65,
+      note: "The 20-minute city: driving is genuinely easy; trams and buses are thinner but nothing is far." }
   },
   {
     id: "goldcoast", name: "Gold Coast", state: "QLD",
@@ -152,7 +163,9 @@ const CITIES = [
     weather: { mild: .55, hot: .8, tropical: .6, seasonal: .3 },
     dating: { score: .7, note: "Young, active and transient; beach and fitness culture drives the scene." },
     pathways: { temp: .8, study: .6, settle: .7,
-      note: "Casual tourism work makes arriving easy; study options are thinner and holiday-town costs bite long-term." }
+      note: "Casual tourism work makes arriving easy; study options are thinner and holiday-town costs bite long-term." },
+    transport: { transit: .5, car: .55, active: .6,
+      note: "The light-rail spine works well along the coast; everything off the spine is car country." }
   },
   {
     id: "canberra", name: "Canberra", state: "ACT",
@@ -174,7 +187,9 @@ const CITIES = [
     weather: { mild: .5, hot: .5, tropical: 0, seasonal: .95 },
     dating: { score: .6, note: "Full of young professionals but light on nightlife; apps, sport and clubs do the work." },
     pathways: { temp: .5, study: .85, settle: .85,
-      note: "Stable government careers, the ANU and high incomes; ideal for settling, quieter for a short stint." }
+      note: "Stable government careers, the ANU and high incomes; ideal for settling, quieter for a short stint." },
+    transport: { transit: .5, car: .9, active: .8,
+      note: "Ten-minute drives, the country's best bike-path network and one light-rail line." }
   },
   {
     id: "sunshinecoast", name: "Sunshine Coast", state: "QLD",
@@ -196,7 +211,9 @@ const CITIES = [
     weather: { mild: .6, hot: .75, tropical: .65, seasonal: .3 },
     dating: { score: .5, note: "Couples-and-families territory; the singles pool is small and skews older." },
     pathways: { temp: .6, study: .4, settle: .75,
-      note: "Lifestyle-first living; casual work exists but study options and career depth are limited." }
+      note: "Lifestyle-first living; casual work exists but study options and career depth are limited." },
+    transport: { transit: .3, car: .7, active: .6,
+      note: "Car country: buses are sparse and the promised rail upgrade is still coming." }
   },
   {
     id: "hobart", name: "Hobart", state: "TAS",
@@ -218,7 +235,9 @@ const CITIES = [
     weather: { mild: 1, hot: .15, tropical: 0, seasonal: .8 },
     dating: { score: .45, note: "A small pool with tight circles; the arts and outdoors scenes are the ways in." },
     pathways: { temp: .5, study: .65, settle: .7,
-      note: "UTAS anchors the study options; cheap to settle if your industry fits the island." }
+      note: "UTAS anchors the study options; cheap to settle if your industry fits the island." },
+    transport: { transit: .35, car: .6, active: .6,
+      note: "Buses only, and one congested highway artery; the upside is that nothing is far away." }
   },
   {
     id: "darwin", name: "Darwin", state: "NT",
@@ -240,7 +259,9 @@ const CITIES = [
     weather: { mild: .1, hot: 1, tropical: 1, seasonal: .1 },
     dating: { score: .65, note: "Highly transient and sociable; easy to meet people, most of them passing through." },
     pathways: { temp: .85, study: .45, settle: .5,
-      note: "Made for stints: quick jobs and high turnover, but few people stay for the long haul." }
+      note: "Made for stints: quick jobs and high turnover, but few people stay for the long haul." },
+    transport: { transit: .3, car: .85, active: .45,
+      note: "Ten-minute drives everywhere; buses are basic and the heat limits walking and cycling." }
   },
   {
     id: "newcastle", name: "Newcastle", state: "NSW",
@@ -262,7 +283,9 @@ const CITIES = [
     weather: { mild: .8, hot: .6, tropical: .25, seasonal: .5 },
     dating: { score: .65, note: "A university city with genuine pub culture and a friendlier pace than Sydney." },
     pathways: { temp: .55, study: .75, settle: .8,
-      note: "A solid university and steady industries; an easy middle path for settling." }
+      note: "A solid university and steady industries; an easy middle path for settling." },
+    transport: { transit: .5, car: .7, active: .7,
+      note: "Compact and flat with a short light rail; driving is easy by NSW standards." }
   },
   {
     id: "cairns", name: "Cairns", state: "QLD",
@@ -284,7 +307,9 @@ const CITIES = [
     weather: { mild: .2, hot: .95, tropical: 1, seasonal: .15 },
     dating: { score: .6, note: "The backpacker and tourism crowd keeps it sociable, but faces change with the seasons." },
     pathways: { temp: .85, study: .45, settle: .6,
-      note: "Tourism keeps short-term work plentiful; long-term career depth is limited." }
+      note: "Tourism keeps short-term work plentiful; long-term career depth is limited." },
+    transport: { transit: .3, car: .75, active: .55,
+      note: "A car town: buses are limited, but nothing is more than 20 minutes away." }
   }
 ];
 
@@ -329,10 +354,27 @@ const SOCIAL_STYLES = [
   { id: "quiet", label: "Quiet & community", desc: "Small circles, neighbours, space and calm" }
 ];
 
-const KIWI_IMPORTANCE = [
-  { id: "high", label: "Really important", desc: "I want Kiwis around me" },
-  { id: "some", label: "Nice to have", desc: "A bonus, not a dealbreaker" },
-  { id: "low", label: "Not a factor", desc: "I'll make friends anywhere" }
+const TRANSPORT_OPTIONS = [
+  { id: "transit", label: "Public transport", desc: "Trains, trams and buses need to be good" },
+  { id: "car", label: "Driving", desc: "Traffic and parking need to be bearable" },
+  { id: "active", label: "Walking & cycling", desc: "Compact and bike-friendly matters" },
+  { id: "mix", label: "A bit of everything", desc: "Flexible, as long as commutes stay sane" }
+];
+
+// Importance sliders: every factor a user can weight, with short radar labels
+const FACTOR_META = [
+  { key: "career", label: "Career fit", short: "Career" },
+  { key: "hobbies", label: "Lifestyle & hobbies", short: "Hobbies" },
+  { key: "weather", label: "Weather", short: "Weather" },
+  { key: "transport", label: "Getting around", short: "Transport" },
+  { key: "travel", label: "Travel connections", short: "Travel" },
+  { key: "social", label: "Social life", short: "Social" },
+  { key: "kiwi", label: "Kiwi community", short: "Kiwis" },
+  { key: "family", label: "Family & schools", short: "Family", when: "kids" },
+  { key: "pets", label: "Pets", short: "Pets", when: "pets" },
+  { key: "dating", label: "Meeting someone", short: "Dating", when: "connection" },
+  { key: "pathway", label: "Pathway fit", short: "Pathway" },
+  { key: "housing", label: "Housing fit", short: "Housing" }
 ];
 
 const WEATHER_OPTIONS = [
