@@ -1,7 +1,26 @@
 /* Flag palette: #346EAA blue, #E13940 red, #FFFFFF white, #000000 black.
    Blue carries text/UI (white-on-blue 5.3:1); red is the accent for large
-   text and graphics only (4.3:1 on white, so it never sets body-size text). */
+   text and graphics only (4.3:1 on white, so it never sets body-size text).
+   Dark is the default theme; html[data-theme="light"] opts into light. */
 :root {
+  color-scheme: dark;
+  --bg: #000000;
+  --ink: #ffffff;
+  --body: #d3d7db;
+  --muted: #9aa3ac;
+  --accent: #7fb0e0;
+  --accent2: #ed5f66;
+  --accent-soft: #12212f;
+  --line: #262c33;
+  --card: #14171b;
+  --btn-bg: #7fb0e0;
+  --btn-text: #06101a;
+  --logo-dim: #4a6076;
+  --radius: 14px;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
   --bg: #f7f9fb;
   --ink: #0a0a0a;
   --body: #222222;
@@ -14,27 +33,7 @@
   --btn-bg: #346eaa;
   --btn-text: #ffffff;
   --logo-dim: #9db8d2;
-  --radius: 14px;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #000000;
-    --ink: #ffffff;
-    --body: #d3d7db;
-    --muted: #9aa3ac;
-    --accent: #7fb0e0;
-    --accent2: #ed5f66;
-    --accent-soft: #12212f;
-    --line: #262c33;
-    --card: #14171b;
-    --btn-bg: #7fb0e0;
-    --btn-text: #06101a;
-    --logo-dim: #4a6076;
-  }
-}
-
-html { color-scheme: light dark; }
 
 * { box-sizing: border-box; }
 
@@ -71,7 +70,29 @@ header {
   padding: 18px 20px 0;
   max-width: 640px;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
 }
+
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.theme-toggle:hover { border-color: var(--accent); }
+
+.theme-toggle .icon-moon { display: none; }
+:root[data-theme="light"] .theme-toggle .icon-sun { display: none; }
+:root[data-theme="light"] .theme-toggle .icon-moon { display: block; }
 
 header h1 {
   font-size: 19px;

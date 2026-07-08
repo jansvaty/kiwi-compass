@@ -5,15 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Kiwi Compass: find your place across the ditch</title>
   <meta name="description" content="A city-matching tool for New Zealanders moving to Australia. Match your work, hobbies, travel and social life against 12 Australian cities, with the reasoning shown for every score.">
-  <meta name="theme-color" content="#346eaa" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#000000">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Kiwi Compass">
-  <link rel="stylesheet" href="css/style.css?v=18">
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem("kc-theme") === "light")
+          document.documentElement.dataset.theme = "light";
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="css/style.css?v=19">
 </head>
 <body class="home">
   <header>
@@ -35,6 +42,10 @@
         <p>Find your place across the ditch</p>
       </div>
     </div>
+    <button id="theme-toggle" class="theme-toggle" aria-label="Switch to light mode">
+      <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>
+      <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>
+    </button>
   </header>
 
   <main>
@@ -126,5 +137,6 @@
   <script>
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
   </script>
+  <script src="js/theme.js?v=19"></script>
 </body>
 </html>
