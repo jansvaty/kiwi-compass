@@ -95,7 +95,7 @@ header {
 :root[data-theme="light"] .theme-toggle .icon-moon { display: block; }
 
 header h1 {
-  font-size: 19px;
+  font-size: 21px;
   font-weight: 700;
   margin: 0;
   letter-spacing: -0.02em;
@@ -121,9 +121,29 @@ header p {
 }
 
 .logo {
-  width: 27px;
-  height: 27px;
+  width: 42px;
+  height: 42px;
   flex: none;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: none;
+}
+
+.header-right nav a {
+  color: var(--body);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  padding: 8px 4px;
+}
+.header-right nav a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 main {
