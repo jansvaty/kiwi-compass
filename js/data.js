@@ -337,7 +337,8 @@ const HOBBIES = [
   { id: "food", label: "Food, coffee & wine" },
   { id: "dive", label: "Diving & snorkelling" },
   { id: "camp", label: "Camping & road trips" },
-  { id: "snow", label: "Skiing & snowboarding" }
+  { id: "snow", label: "Skiing & snowboarding" },
+  { id: "reading", label: "Reading and watching TV" }
 ];
 
 const TRAVEL = [
@@ -347,7 +348,8 @@ const TRAVEL = [
   { id: "usa", label: "USA & Canada" },
   { id: "pacific", label: "Pacific Islands" },
   { id: "africa", label: "Africa" },
-  { id: "southam", label: "South America" }
+  { id: "southam", label: "South America" },
+  { id: "domestic", label: "Only domestic travel" }
 ];
 
 const SOCIAL_STYLES = [
@@ -389,6 +391,7 @@ const WEATHER_OPTIONS = [
 
 const HOUSEHOLD_OPTIONS = [
   { id: "single", label: "I'm single", desc: "Moving on my own" },
+  { id: "partner", label: "With a partner or spouse", desc: "Moving together as a couple" },
   { id: "connection", label: "Hoping to meet someone", desc: "Dating and meeting people matters" },
   { id: "kids", label: "Kids in tow", desc: "Schools, childcare and family life matter" },
   { id: "pets", label: "Pets in tow", desc: "Pet-friendly housing and lifestyle matter" }
